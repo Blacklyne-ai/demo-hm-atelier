@@ -13,7 +13,7 @@ export const site = {
 
   // Contact — Instagram & Threads verified. Phone appeared in a post (embroidery);
   // treat as tentative until confirmed. UAE dialling.
-  phone: "050 332 5795",
+  phone: "+971 50 332 5795",
   phoneHref: "tel:+971503325795",
   whatsappHref: "https://wa.me/971503325795",
   email: "", // Operator-TODO: official enquiry email not yet published

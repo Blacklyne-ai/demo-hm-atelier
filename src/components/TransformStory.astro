@@ -1,10 +1,10 @@
 ---
 // Reusable before→after scroll-scrub story (factory → bespoke). Multi-instance safe.
 // Frames live in /media/<dir>/{desktop,mobile}/fNNN.webp + /media/<dir>/poster.webp
-interface Props { dir: string; count: number; eyebrow?: string; headline: string; beforeLabel: string; afterLabel: string; alt: string; }
-const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, afterLabel, alt } = Astro.props;
+interface Props { dir: string; count: number; eyebrow?: string; headline: string; beforeLabel: string; afterLabel: string; alt: string; zoom?: number; zoomOrigin?: string; }
+const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, afterLabel, alt, zoom = 1, zoomOrigin = '50% 50%' } = Astro.props;
 ---
-<section class="ts" data-transform-story data-dir={dir} data-count={count}>
+<section class="ts" data-transform-story data-dir={dir} data-count={count} data-zoom={zoom} data-zoom-origin={zoomOrigin}>
   <div class="ts-stage" data-ts-stage>
     <img class="ts-poster" src={`/media/${dir}/poster.webp`} alt={alt} loading="lazy" decoding="async" />
     <canvas data-ts-canvas aria-hidden="true"></canvas>
@@ -52,6 +52,8 @@ const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, after
     if (!stage || !canvas) return;
     const COUNT = parseInt(section.dataset.count || '96', 10);
     const dir = section.dataset.dir || '';
+    const zoom = parseFloat(section.dataset.zoom || '1');
+    if (zoom !== 1) { canvas.style.transformOrigin = section.dataset.zoomOrigin || '50% 50%'; canvas.style.willChange = 'transform'; }
     const base = `/media/${dir}/${isMobile ? 'mobile' : 'desktop'}`;
     const url = (i: number) => `${base}/f${String(i + 1).padStart(3, '0')}.webp`;
     const ctx = canvas.getContext('2d');
@@ -94,6 +96,7 @@ const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, after
           const p = self.progress;
           const idx = Math.min(COUNT - 1, Math.max(0, Math.round(p * (COUNT - 1))));
           if (idx !== cur) { cur = idx; render(idx); }
+          if (zoom !== 1) canvas.style.transform = `scale(${1 + p * (zoom - 1)})`; // push in toward the detail
           if (barEl) barEl.style.transform = `scaleX(${p})`;
           if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - p * 1.4));
           if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + p * 1.3));
