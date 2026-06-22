@@ -1,12 +1,16 @@
 ---
-// Original HM Atelier crest (Instagram profile), recolored only — never redrawn.
-// cream = nav/footer on dark · gold = accent seal · original = cream-ground (light).
+// Original HM Atelier crest (Instagram profile), recolored only — never redrawn,
+// background keyed out to transparent. ink = dark on light (nav/footer) · cream = on dark ·
+// gold = accent seal · original = cream-ground raster (favicon source only).
 // Operator-TODO: replace with high-res vector once supplied by the client.
-interface Props { class?: string; variant?: 'cream' | 'gold' | 'original'; }
-const { class: cls = 'h-9 w-auto', variant = 'cream' } = Astro.props;
-const src =
-  variant === 'gold' ? '/logo-crest-gold.png'
-  : variant === 'original' ? '/logo-crest-original.png'
-  : '/logo-crest-cream.png';
+interface Props { class?: string; variant?: 'ink' | 'cream' | 'gold' | 'original'; }
+const { class: cls = 'h-9 w-auto', variant = 'ink' } = Astro.props;
+const map: Record<string, string> = {
+  ink: '/logo-crest-ink.png',
+  cream: '/logo-crest-cream.png',
+  gold: '/logo-crest-gold.png',
+  original: '/logo-crest-original.png',
+};
+const src = map[variant] ?? map.ink;
 ---
 <img src={src} class={cls} width="175" height="242" alt="HM Atelier" decoding="async" />

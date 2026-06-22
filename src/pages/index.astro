@@ -2,9 +2,10 @@
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import SpecStrip from '../components/SpecStrip.astro';
-import WorkExhibition from '../components/WorkExhibition.astro';
-import TransformScrub from '../components/TransformScrub.astro';
+import TransformStory from '../components/TransformStory.astro';
+import BeforeAfterWipe from '../components/BeforeAfterWipe.astro';
 import Craft from '../components/Craft.astro';
+import SlideGallery from '../components/SlideGallery.astro';
 import CraftSequence from '../components/CraftSequence.astro';
 import Marquee from '../components/Marquee.astro';
 import About from '../components/About.astro';
@@ -13,13 +14,32 @@ import Contact from '../components/Contact.astro';
 <Layout
   title="HM Atelier · Bespoke luxury automotive interiors · Dubai"
   current="/"
-  heroPoster="/media/exhibition/bugatti-chiron-hero.webp"
+  heroPoster="/media/transform/poster.webp"
 >
   <Hero />
   <SpecStrip />
-  <WorkExhibition />
-  <TransformScrub />
+
+  <TransformStory
+    dir="transform-door" count={97}
+    headline="The same door — rebuilt by hand."
+    beforeLabel="Factory · stock leather" afterLabel="HM Atelier · hand-embroidered"
+    alt="A factory car door panel being rebuilt in white leather with hand embroidery by HM Atelier"
+  />
+
   <Craft />
+
+  <BeforeAfterWipe
+    dir="transform-seat"
+    headline="The same seat — re-trimmed by hand."
+    beforeLabel="Factory · stock leather" afterLabel="HM Atelier · bespoke trim"
+    alt="A factory sports seat re-trimmed with bespoke stitching and an embroidered crest by HM Atelier"
+  />
+
+  <SlideGallery
+    slugs={['bugatti-chiron', 'lamborghini-urus', 'mclaren-720s', 'rolls-royce-wheel']}
+    eyebrow="The detail" heading="Look closer."
+  />
+
   <CraftSequence />
   <Marquee />
   <About />

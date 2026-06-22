@@ -1,20 +1,27 @@
 ---
-// Marques worked on — reference works (named cleanly; markenrecht: Operator-TODO).
-import { marques } from '../data/site';
+// Marques worked on — REAL brand logos (simple-icons), monochrome, uniform cells,
+// scrolling. Reference works. Markenrecht: confirm logo usage before LIVE (JUDGEMENT_CALLS).
 interface Props { heading?: boolean; }
 const { heading = true } = Astro.props;
+const marques = [
+  { name: 'Rolls-Royce', slug: 'rollsroyce' },
+  { name: 'Bugatti', slug: 'bugatti' },
+  { name: 'Ferrari', slug: 'ferrari' },
+  { name: 'Lamborghini', slug: 'lamborghini' },
+  { name: 'McLaren', slug: 'mclaren' },
+  { name: 'Bentley', slug: 'bentley' },
+  { name: 'Porsche', slug: 'porsche' },
+];
 ---
 <section class="bg-bone" aria-label="Marques worked on">
   <div class="shell">
-    {heading && (
-      <p class="label text-center fade-in" style="color:rgb(var(--rgb-stone))">Reference works · the marques that have come through</p>
-    )}
-    <div class="mq" class:list={[heading && 'mt-7']}>
+    {heading && <p class="label text-center fade-in" style="color:rgb(var(--rgb-stone))">Reference works · the marques that have come through</p>}
+    <div class="mq" class:list={[heading && 'mt-8']}>
       <div class="mq-track">
         {[0, 1].map(() => (
           <div class="mq-group" aria-hidden="true">
             {marques.map((m) => (
-              <span class="mq-item">{m}<span class="mq-dot"></span></span>
+              <span class="mq-cell"><img src={`/logos/${m.slug}-mono.png`} alt={m.name} loading="lazy" decoding="async" /></span>
             ))}
           </div>
         ))}
@@ -26,14 +33,16 @@ const { heading = true } = Astro.props;
 </section>
 
 <style>
-  .mq { position: relative; overflow: hidden; padding-block: clamp(0.6rem, 2vw, 1.1rem); border-block: 1px solid var(--hair); }
-  .mq-track { display: flex; width: max-content; animation: marqueeScroll 42s linear infinite; }
-  .mq-group { display: flex; flex: none; }
-  .mq-item { display: inline-flex; align-items: center; gap: clamp(1.6rem, 4vw, 3rem); padding-inline-end: clamp(1.6rem, 4vw, 3rem); font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 2.1rem); font-weight: 440; letter-spacing: 0.01em; color: rgb(var(--rgb-graphite)); white-space: nowrap; }
-  .mq-dot { width: 0.4rem; height: 0.4rem; rotate: 45deg; background: rgb(var(--rgb-brass)); flex: none; }
+  .mq { position: relative; overflow: hidden; padding-block: clamp(1.4rem, 3vw, 2.2rem); border-block: 1px solid var(--hair); }
+  .mq-track { display: flex; width: max-content; align-items: center; animation: marqueeScroll 46s linear infinite; }
+  .mq-group { display: flex; flex: none; align-items: center; }
+  /* uniform cell → every logo occupies the same footprint, contained + centred */
+  .mq-cell { flex: none; display: inline-flex; align-items: center; justify-content: center; width: clamp(8.5rem, 12vw, 11rem); height: 46px; }
+  .mq-cell img { max-width: 78%; max-height: 100%; object-fit: contain; opacity: 0.46; transition: opacity 0.35s ease; }
+  .mq-cell:hover img { opacity: 1; }
   .mq:hover .mq-track { animation-play-state: paused; }
   .mq-fade { position: absolute; top: 0; bottom: 0; width: 12%; z-index: 2; pointer-events: none; }
   .mq-fade-l { left: 0; background: linear-gradient(90deg, rgb(var(--rgb-bone)), transparent); }
   .mq-fade-r { right: 0; background: linear-gradient(270deg, rgb(var(--rgb-bone)), transparent); }
-  @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; flex-wrap: wrap; justify-content: center; } }
 </style>

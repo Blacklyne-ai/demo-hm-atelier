@@ -1,51 +1,125 @@
 ---
+// HERO = the transformation. Land on a factory Mercedes-Maybach console; scrolling
+// re-skins it in crocodile (real before → Higgsfield morph). Brand copy over it.
+// Pinned canvas scrub. Graceful fallback: static poster + copy (no JS / reduced-motion).
 import { heroLine } from '../data/site';
-import { ArrowRight } from '@lucide/astro';
+import { ArrowRight, ArrowDown } from '@lucide/astro';
+const COUNT = 113;
 ---
-<section class="hero">
-  <div class="hero-inner shell">
-    <div class="hero-copy">
-      <p class="eyebrow fade-in">{heroLine.kicker}</p>
-      <h1 class="h-hero hero-title fade-in stagger-1">
-        {heroLine.titleA} <span class="display-italic text-brass-deep">{heroLine.titleB}</span>
-      </h1>
-      <p class="lead measure mt-7 fade-in stagger-2">{heroLine.sub}</p>
-      <div class="mt-9 flex flex-wrap items-center gap-3 fade-in stagger-3">
-        <a href="/work" class="btn btn-primary btn-lg inline-flex" data-magnetic>View the work <ArrowRight size={17} /></a>
-        <a href="/contact" class="btn btn-ghost btn-lg inline-flex">Commission a piece</a>
+<section data-hero class="hero" data-hero-count={COUNT}>
+  <div data-hero-stage class="hero-stage">
+    <img class="hero-poster" src="/media/transform/poster.webp" width="1280" height="720"
+         alt="A factory Mercedes-Maybach centre console, before HM Atelier re-skins it in crocodile leather"
+         fetchpriority="high" decoding="async" />
+    <canvas data-hero-canvas aria-hidden="true"></canvas>
+    <div class="hero-scrim" aria-hidden="true"></div>
+
+    <div class="hero-copy shell">
+      <p class="eyebrow eyebrow--center fade-in">{heroLine.kicker}</p>
+      <h1 class="hero-h">{heroLine.titleA} <span class="display-italic">{heroLine.titleB}</span></h1>
+      <p class="hero-sub fade-in stagger-1">{heroLine.sub}</p>
+      <div class="hero-cta fade-in stagger-2">
+        <a href="/work" class="btn btn-light btn-lg inline-flex" data-magnetic>View the work <ArrowRight size={17} /></a>
+        <a href="/contact" class="btn btn-ondark btn-lg inline-flex">Commission a piece</a>
       </div>
+      <p class="hero-cue fade-in stagger-3"><ArrowDown size={15} /> Scroll — factory leather becomes crocodile</p>
     </div>
 
-    <figure class="hero-film fade-in stagger-2">
-      <div class="hero-film-frame">
-        <img src="/media/exhibition/bugatti-chiron-hero.webp" width="960" height="540"
-             alt="Bespoke Bugatti Chiron steering wheel in black leather with red contrast stitching, handcrafted by HM Atelier"
-             fetchpriority="high" decoding="async" />
-        <span class="hero-corner tl" aria-hidden="true"></span>
-        <span class="hero-corner br" aria-hidden="true"></span>
-      </div>
-      <figcaption class="hero-cap"><span class="hero-cap-dot"></span>Bugatti Chiron · in the atelier</figcaption>
-    </figure>
+    <div class="hero-labels" aria-hidden="true">
+      <span class="hero-label" data-hero-before>Factory · stock leather</span>
+      <span class="hero-label hero-label-after" data-hero-after>HM Atelier · crocodile</span>
+    </div>
+    <div class="hero-bar" aria-hidden="true"><span data-hero-bar></span></div>
   </div>
 </section>
 
 <style>
-  .hero { position: relative; background: rgb(var(--rgb-bone)); padding-top: 8.5rem; padding-bottom: 3.5rem; overflow: hidden; }
-  @media (min-width: 1024px) { .hero { min-height: 100svh; display: flex; align-items: center; padding-top: 6rem; padding-bottom: 3rem; } }
-  .hero-inner { width: 100%; display: grid; gap: 2.8rem; align-items: center; }
-  @media (min-width: 1024px) { .hero-inner { grid-template-columns: 1.02fr 0.98fr; gap: 5rem; } }
+  .hero { background: #0c0a08; color: rgb(var(--rgb-bone)); }
+  .hero-stage { position: relative; height: 100svh; min-height: 600px; overflow: hidden; background: #0c0a08; }
+  .hero-poster, .hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-stage canvas { z-index: 1; }
+  .hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(125% 75% at 50% 30%, transparent 38%, rgb(12 10 8 / 0.5) 100%), linear-gradient(to bottom, rgb(12 10 8 / 0.72) 0%, rgb(12 10 8 / 0.15) 30%, transparent 55%, rgb(12 10 8 / 0.7) 100%); }
 
-  .hero-title { margin-top: 1.6rem; max-width: 14ch; }
+  .hero-copy { position: absolute; z-index: 3; top: clamp(7rem, 19vh, 12rem); left: 50%; transform: translateX(-50%); width: 100%; text-align: center; }
+  .hero-h { font-family: var(--font-display); font-weight: 380; font-size: clamp(2.5rem, 6vw, 5.4rem); line-height: 1.0; letter-spacing: -0.02em; color: #fff; margin-top: 1.4rem; text-wrap: balance; max-width: 16ch; margin-inline: auto; text-shadow: 0 2px 40px rgb(0 0 0 / 0.55); }
+  .hero-h .display-italic { font-style: italic; font-weight: 340; color: rgb(var(--rgb-brass-lite)); }
+  .hero-sub { margin: 1.6rem auto 0; max-width: 40rem; font-size: clamp(1.02rem, 1.3vw, 1.18rem); line-height: 1.6; color: rgb(var(--rgb-bone) / 0.86); text-shadow: 0 1px 18px rgb(0 0 0 / 0.5); }
+  .hero-cta { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+  .hero-cue { margin-top: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-bone) / 0.6); }
+  .hero-cue :global(svg) { animation: heroBob 2.2s ease-in-out infinite; }
 
-  .hero-film { margin: 0; justify-self: center; width: 100%; max-width: 27rem; }
-  .hero-film-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: #0c0a08; box-shadow: inset 0 0 0 1px rgb(var(--rgb-ink) / 0.08), 0 50px 90px -50px rgb(26 23 20 / 0.45); }
-  .hero-film-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); animation: heroKen 18s ease-out forwards; }
-  .hero-corner { position: absolute; width: 24px; height: 24px; z-index: 2; pointer-events: none; }
-  .hero-corner.tl { top: 14px; left: 14px; border-top: 1px solid rgb(var(--rgb-brass)); border-left: 1px solid rgb(var(--rgb-brass)); }
-  .hero-corner.br { bottom: 14px; right: 14px; border-bottom: 1px solid rgb(var(--rgb-brass)); border-right: 1px solid rgb(var(--rgb-brass)); }
-  .hero-cap { margin-top: 1rem; display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-stone)); }
-  .hero-cap-dot { width: 5px; height: 5px; border-radius: 999px; background: rgb(var(--rgb-brass)); flex: none; }
-  @media (max-width: 1023px) { .hero-film { order: -1; max-width: 19rem; } .hero-title { margin-top: 1.2rem; } }
-  @keyframes heroKen { from { transform: scale(1.04); } to { transform: scale(1.1); } }
-  @media (prefers-reduced-motion: reduce) { .hero-film-frame img { animation: none; } }
+  .hero-labels { position: absolute; z-index: 3; bottom: clamp(2.5rem, 6vh, 4rem); left: 0; right: 0; max-width: 82rem; margin-inline: auto; padding-inline: 1.5rem; display: flex; justify-content: space-between; }
+  @media (min-width: 768px) { .hero-labels { padding-inline: 2.75rem; } }
+  .hero-label { font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(var(--rgb-bone) / 0.75); transition: opacity 0.4s ease; }
+  .hero-label-after { color: rgb(var(--rgb-brass-lite)); opacity: 0.25; }
+  .hero-bar { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 2px; background: rgb(255 255 255 / 0.12); }
+  .hero-bar span { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: rgb(var(--rgb-brass-lite)); }
+
+  @media (max-width: 700px) { .hero-cue { display: none; } .hero-labels { font-size: 0.62rem; } }
+  @keyframes heroBob { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(4px); opacity: 1; } }
+  :global(html:not(.js)) .hero-stage canvas { display: none; }
 </style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const section = document.querySelector('[data-hero]') as HTMLElement | null;
+  const stage = document.querySelector('[data-hero-stage]') as HTMLElement | null;
+  const canvas = document.querySelector('[data-hero-canvas]') as HTMLCanvasElement | null;
+  if (section && stage && canvas) {
+    const COUNT = parseInt(section.dataset.heroCount || '113', 10);
+    const ctx = canvas.getContext('2d');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 700px)').matches;
+    const dir = isMobile ? '/media/transform/mobile' : '/media/transform/desktop';
+    const url = (i: number) => `${dir}/f${String(i + 1).padStart(3, '0')}.webp`;
+    const frames: HTMLImageElement[] = new Array(COUNT);
+    const poster = new Image();
+    let cur = -1, cssW = 0, cssH = 0;
+
+    const drawCover = (img: HTMLImageElement) => {
+      if (!ctx || !img.complete || !img.naturalWidth) return;
+      const s = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
+      const w = img.naturalWidth * s, h = img.naturalHeight * s;
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.drawImage(img, (cssW - w) / 2, (cssH - h) / 2, w, h);
+    };
+    const render = (idx: number) => { const img = frames[idx]?.complete ? frames[idx] : poster; if (img && img.complete) drawCover(img); };
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cssW = r.width; cssH = r.height;
+      canvas.width = Math.round(cssW * dpr); canvas.height = Math.round(cssH * dpr);
+      ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render(cur < 0 ? 0 : cur);
+    };
+    poster.onload = resize; poster.src = '/media/transform/poster.webp';
+    window.addEventListener('resize', resize, { passive: true });
+
+    // preload frames after first paint (poster is the LCP); ready well before user scrolls
+    const preload = () => { for (let i = 0; i < COUNT; i++) { const im = new Image(); im.decoding = 'async'; im.src = url(i); frames[i] = im; } };
+    if (document.readyState === 'complete') setTimeout(preload, 200);
+    else window.addEventListener('load', () => setTimeout(preload, 200), { once: true });
+
+    const beforeEl = section.querySelector('[data-hero-before]') as HTMLElement | null;
+    const afterEl = section.querySelector('[data-hero-after]') as HTMLElement | null;
+    const barEl = section.querySelector('[data-hero-bar]') as HTMLElement | null;
+
+    if (!reduce) {
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.create({
+        trigger: section, start: 'top top', end: '+=185%', pin: stage, pinSpacing: true, scrub: 1, invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          const idx = Math.min(COUNT - 1, Math.max(0, Math.round(p * (COUNT - 1))));
+          if (idx !== cur) { cur = idx; render(idx); }
+          if (barEl) barEl.style.transform = `scaleX(${p})`;
+          if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - p * 1.4));
+          if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + p * 1.3));
+        },
+      });
+      ScrollTrigger.refresh();
+    }
+  }
+</script>

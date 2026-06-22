@@ -10,7 +10,7 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
   <div class="shell">
     <div data-navpill class="navpill glass">
       <a href="/" class="brand" aria-label={`${site.name} — home`}>
-        <Logo class="h-8 w-auto md:h-9" variant="original" />
+        <Logo class="h-8 w-auto md:h-9" variant="ink" />
         <span class="brand-word">HM&nbsp;Atelier</span>
       </a>
 
@@ -37,7 +37,7 @@ const isActive = (href: string) => (href === '/' ? current === '/' : current.sta
 
 <div data-menu class="mobile-menu" aria-hidden="true">
   <div class="flex items-center justify-between p-5">
-    <a href="/" class="brand"><Logo class="h-8 w-auto" variant="original" /><span class="brand-word">HM&nbsp;Atelier</span></a>
+    <a href="/" class="brand"><Logo class="h-8 w-auto" variant="ink" /><span class="brand-word">HM&nbsp;Atelier</span></a>
     <button data-menu-close class="icon-btn" aria-label="Close menu"><X size={20} /></button>
   </div>
   <nav class="flex flex-col gap-1 px-6 pt-6" aria-label="Mobile">

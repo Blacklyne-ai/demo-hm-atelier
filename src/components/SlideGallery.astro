@@ -1,0 +1,58 @@
+---
+// Editorial slide-in gallery — elevated stills slide in from alternating sides on
+// scroll, paired with text. Uses /media/exhibition/<slug>.webp + work data.
+import { work } from '../data/site';
+interface Props { slugs: string[]; eyebrow?: string; heading?: string; }
+const { slugs, eyebrow = 'The detail', heading = 'Closer.' } = Astro.props;
+const items = slugs.map((s) => work.find((w) => w.slug === s)).filter(Boolean) as typeof work[number][];
+---
+<section class="sg section-pad bg-bone">
+  <div class="shell">
+    <div class="max-w-3xl">
+      <p class="eyebrow fade-in">{eyebrow}</p>
+      <h2 class="h-display mt-5 text-balance fade-in stagger-1">{heading}</h2>
+    </div>
+
+    <div class="sg-rows">
+      {items.map((w) => (
+        <article class="sg-row" data-sg>
+          <div class="sg-media">
+            <img src={`/media/exhibition/${w.slug}.webp`} alt={`${w.marque} — ${w.part}, by HM Atelier`} loading="lazy" decoding="async" width="1280" height="720" />
+          </div>
+          <div class="sg-text">
+            <p class="sg-marque">{w.marque}</p>
+            <h3 class="sg-title">{w.part}</h3>
+            <p class="sg-note">{w.note}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sg-rows { margin-top: clamp(3rem, 6vw, 5rem); display: grid; gap: clamp(3.5rem, 7vw, 6.5rem); }
+  .sg-row { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 900px) { .sg-row { grid-template-columns: 1.25fr 1fr; gap: clamp(3rem, 5vw, 5rem); } .sg-row:nth-child(even) .sg-media { order: 2; } }
+  .sg-media { overflow: hidden; border-radius: var(--r-lg); background: #0c0a08; aspect-ratio: 16 / 11; box-shadow: 0 40px 80px -50px rgb(26 23 20 / 0.5); }
+  .sg-media img { width: 100%; height: 100%; object-fit: cover; }
+  .sg-marque { font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: rgb(var(--rgb-brass-deep)); }
+  .sg-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.08; letter-spacing: -0.015em; color: rgb(var(--rgb-ink)); margin-top: 0.7rem; }
+  .sg-note { margin-top: 1rem; max-width: 34ch; color: rgb(var(--rgb-graphite)); line-height: 1.7; }
+
+  /* slide-in: media from its side, text from the other */
+  .sg-media, .sg-text { opacity: 0; transition: opacity 1s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
+  .sg-media { transform: translateX(-7%); }
+  .sg-text { transform: translateX(7%); }
+  @media (min-width: 900px) { .sg-row:nth-child(even) .sg-media { transform: translateX(7%); } .sg-row:nth-child(even) .sg-text { transform: translateX(-7%); } }
+  .sg-row.is-in .sg-media, .sg-row.is-in .sg-text { opacity: 1; transform: translateX(0); }
+  html:not(.js) .sg-media, html:not(.js) .sg-text { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .sg-media, .sg-text { transition: opacity 0.4s ease; transform: none; } }
+</style>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('[data-sg]').forEach((el) => io.observe(el));
+</script>
