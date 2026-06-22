@@ -42,7 +42,8 @@ const COUNT = 97;
   .hero { background: #0c0a08; color: rgb(var(--rgb-bone)); }
   .hero-stage { position: relative; height: 100svh; min-height: 600px; overflow: hidden; background: #0c0a08; }
   .hero-poster, .hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
-  .hero-stage canvas { z-index: 1; }
+  .hero-poster { object-position: 50% 16%; }
+  .hero-stage canvas { z-index: 1; transform-origin: 50% 12%; }
   .hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(130% 80% at 50% 32%, transparent 46%, rgb(12 10 8 / 0.45) 100%), linear-gradient(to bottom, rgb(12 10 8 / 0.5) 0%, transparent 26%, transparent 72%, rgb(12 10 8 / 0.6) 100%); }
   .hero-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, rgb(10 9 7 / 0.7), rgb(10 9 7 / 0.55) 45%, rgb(10 9 7 / 0.78)); }
 
@@ -90,10 +91,20 @@ const COUNT = 97;
 
     const drawCover = (img: HTMLImageElement) => {
       if (!ctx || !img.complete || !img.naturalWidth) return;
-      const s = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
-      const w = img.naturalWidth * s, h = img.naturalHeight * s;
+      const iw = img.naturalWidth, ih = img.naturalHeight;
       ctx.clearRect(0, 0, cssW, cssH);
-      ctx.drawImage(img, (cssW - w) / 2, (cssH - h) / 2, w, h);
+      if (cssW >= 760) {
+        // Desktop: fit full WIDTH so the whole wheel + console shows, with headroom at the
+        // top so the floating nav never clips the steering wheel.
+        const s = cssW / iw, w = cssW, h = ih * s;
+        const slack = cssH - h;
+        const y = slack >= 0 ? Math.min(slack, Math.round(cssH * 0.12)) : slack * 0.3;
+        ctx.drawImage(img, 0, y, w, h);
+      } else {
+        // Mobile: cover (fill, console prominent), biased toward the top so the wheel shows.
+        const s = Math.max(cssW / iw, cssH / ih), w = iw * s, h = ih * s;
+        ctx.drawImage(img, (cssW - w) / 2, Math.min(0, (cssH - h) * 0.16), w, h);
+      }
     };
     const render = (idx: number) => { const img = frames[idx]?.complete ? frames[idx] : poster; if (img && img.complete) drawCover(img); };
     const resize = () => {
