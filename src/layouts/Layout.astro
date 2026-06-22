@@ -50,12 +50,12 @@ const jsonLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#0A0908" />
+    <meta name="theme-color" content="#EEE7DD" />
     {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow" />}
 
     {heroPoster && <link rel="preload" as="image" href={heroPoster} fetchpriority="high" />}
     <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/hanken.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -80,7 +80,6 @@ const jsonLd = {
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
     <div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>
-    <div class="grain" aria-hidden="true"></div>
     <Header current={current} />
     <main id="main"><slot /></main>
     <Footer />
@@ -209,7 +208,7 @@ const jsonLd = {
 
     <style is:global>
       .skip-link { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-      .skip-link:focus { position: fixed; top: 1rem; left: 1rem; width: auto; height: auto; clip: auto; padding: 0.75rem 1.25rem; background: rgb(var(--rgb-cream)); color: rgb(var(--rgb-bg)); border-radius: var(--r-sm); z-index: 300; font-weight: 700; }
+      .skip-link:focus { position: fixed; top: 1rem; left: 1rem; width: auto; height: auto; clip: auto; padding: 0.75rem 1.25rem; background: rgb(var(--rgb-ink)); color: rgb(var(--rgb-bone)); border-radius: var(--r-sm); z-index: 300; font-weight: 700; }
     </style>
   </body>
 </html>

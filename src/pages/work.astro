@@ -20,10 +20,10 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
     img="/media/work/crocodile-console.webp"
   />
 
-  <section class="section-pad bg-bg" style="padding-top:0;">
+  <section class="section-pad bg-bone" style="padding-top:0;">
     <div class="shell">
       <WorkGrid />
-      <p class="mt-8 text-sm fade-in" style="color:rgb(var(--rgb-cream-dim))">
+      <p class="mt-8 text-sm fade-in" style="color:rgb(var(--rgb-stone))">
         Marque names denote reference works — interiors commissioned and rebuilt by the atelier. All trademarks belong to their respective owners.
       </p>
     </div>
@@ -36,7 +36,7 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
     alt="Diamond-perforated leather seat handcrafted by HM Atelier"
   />
 
-  <section class="section-pad bg-bg">
+  <section class="section-pad bg-bone">
     <div class="shell">
       <div class="svc-grid">
         {services.map((s, i) => {
@@ -45,7 +45,7 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
             <article class="svc-card fade-in" class:list={[`stagger-${(i % 3) + 1}`]}>
               <span class="svc-ico">{Icon && <Icon size={22} />}</span>
               <h3 class="h-md mt-5">{s.title}</h3>
-              <p class="mt-2 text-[0.95rem] leading-relaxed" style="color:rgb(var(--rgb-cream) / 0.8)">{s.text}</p>
+              <p class="mt-2 text-[0.95rem] leading-relaxed" style="color:rgb(var(--rgb-graphite))">{s.text}</p>
             </article>
           );
         })}
@@ -60,7 +60,7 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
   .svc-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   @media (min-width: 640px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 960px) { .svc-grid { grid-template-columns: repeat(3, 1fr); } }
-  .svc-card { padding: 1.8rem; border-radius: var(--r-lg); border: 1px solid var(--hair-soft); background: rgb(var(--rgb-surface)); transition: border-color 0.3s ease, transform 0.4s ease; }
-  .svc-card:hover { border-color: rgb(var(--rgb-gold) / 0.4); transform: translateY(-3px); }
-  .svc-ico { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: var(--r-md); background: rgb(var(--rgb-gold) / 0.1); color: rgb(var(--rgb-gold)); border: 1px solid rgb(var(--rgb-gold) / 0.22); }
+  .svc-card { padding: 1.8rem; border-radius: var(--r-lg); border: 1px solid var(--hair); background: rgb(var(--rgb-surface)); transition: border-color 0.3s ease, transform 0.4s ease; }
+  .svc-card:hover { border-color: rgb(var(--rgb-brass) / 0.4); transform: translateY(-3px); }
+  .svc-ico { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: var(--r-md); background: rgb(var(--rgb-brass) / 0.12); color: rgb(var(--rgb-brass-deep)); border: 1px solid rgb(var(--rgb-brass) / 0.28); }
 </style>

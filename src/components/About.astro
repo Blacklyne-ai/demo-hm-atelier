@@ -5,7 +5,7 @@ import { ArrowRight } from '@lucide/astro';
 interface Props { full?: boolean; }
 const { full = false } = Astro.props;
 ---
-<section id="about" class="section-pad bg-bg">
+<section id="about" class="section-pad bg-bone">
   <div class="shell">
     <div class="about-grid">
       <div class="about-media fade-in" data-parallax-wrap>
@@ -34,7 +34,7 @@ const { full = false } = Astro.props;
 <style>
   .about-grid { display: grid; gap: 2.5rem; align-items: center; }
   @media (min-width: 960px) { .about-grid { grid-template-columns: 0.85fr 1fr; gap: 4rem; } }
-  .about-media { position: relative; overflow: hidden; border-radius: var(--r-lg); border: 1px solid var(--hair-soft); aspect-ratio: 4 / 5; background: rgb(var(--rgb-surface-2)); }
+  .about-media { position: relative; overflow: hidden; border-radius: var(--r-lg); border: 1px solid var(--hair); aspect-ratio: 4 / 5; background: rgb(var(--rgb-surface)); }
   .about-seal { position: absolute; bottom: 1.2rem; right: 1.2rem; z-index: 2; opacity: 0.92; filter: drop-shadow(0 6px 16px rgb(0 0 0 / 0.6)); }
-  .about-role { margin-top: 0.6rem; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(var(--rgb-gold)); }
+  .about-role { margin-top: 0.6rem; font-family: var(--font-sans); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(var(--rgb-brass-deep)); }
 </style>

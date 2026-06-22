@@ -4,8 +4,8 @@ import { MessageCircle, Phone, MapPin, ArrowUpRight } from '@lucide/astro';
 interface Props { full?: boolean; }
 const { full = false } = Astro.props;
 ---
-<section id="contact" class="section-pad bg-bg" style="position:relative; overflow:hidden;">
-  <div class="glow glow-gold" style="width:40rem;height:40rem;left:-14rem;top:-10rem;" aria-hidden="true"></div>
+<section id="contact" class="section-pad bg-bone" style="position:relative; overflow:hidden;">
+  <div class="glow glow-brass" style="width:40rem;height:40rem;left:-14rem;top:-10rem;" aria-hidden="true"></div>
   <div class="shell" style="position:relative; z-index:1;">
     <div class="max-w-3xl">
       {!full && (
@@ -47,7 +47,7 @@ const { full = false } = Astro.props;
     </div>
 
     <div class="contact-foot fade-in">
-      <span class="inline-flex items-center gap-2"><MapPin size={16} class="text-gold" />{site.addressLine}</span>
+      <span class="inline-flex items-center gap-2"><MapPin size={16} class="text-brass-deep" />{site.addressLine}</span>
       <span class="contact-foot-note">{site.addressNote}</span>
     </div>
   </div>
@@ -56,8 +56,8 @@ const { full = false } = Astro.props;
 <style>
   .contact-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   @media (min-width: 720px) { .contact-grid { grid-template-columns: repeat(3, 1fr); } }
-  .ctile-label { display: block; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(var(--rgb-cream-dim)); }
-  .ctile-value { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem; font-family: var(--font-display); font-size: 1.18rem; font-weight: 480; color: rgb(var(--rgb-cream)); }
-  .contact-foot { margin-top: 2.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem; padding-top: 1.6rem; border-top: 1px solid var(--hair-soft); font-size: 0.92rem; color: rgb(var(--rgb-cream) / 0.7); }
-  .contact-foot-note { color: rgb(var(--rgb-cream-dim)); }
+  .ctile-label { display: block; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(var(--rgb-stone)); }
+  .ctile-value { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: 0.35rem; font-family: var(--font-display); font-size: 1.18rem; font-weight: 480; color: rgb(var(--rgb-ink)); }
+  .contact-foot { margin-top: 2.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1.4rem; padding-top: 1.6rem; border-top: 1px solid var(--hair); font-size: 0.92rem; color: rgb(var(--rgb-graphite)); }
+  .contact-foot-note { color: rgb(var(--rgb-stone)); }
 </style>

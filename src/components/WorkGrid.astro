@@ -17,9 +17,8 @@ const list = (items ?? work).slice(0, limit ?? undefined);
         <img src={`/media/work/${w.slug}.webp`} width="640" height="800" loading="lazy" decoding="async"
              alt={`${w.marque} — ${w.part}, bespoke interior work by HM Atelier`} />
         <video muted loop playsinline preload="none" tabindex="-1"></video>
+        <span class="work-play" aria-hidden="true"><Play size={15} fill="currentColor" /></span>
       </div>
-      <span class="work-play" aria-hidden="true"><Play size={16} fill="currentColor" /></span>
-      <div class="work-scrim" aria-hidden="true"></div>
       <div class="work-cap">
         <p class="work-marque">{w.marque}</p>
         <h3 class="work-title">{w.part}</h3>

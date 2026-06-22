@@ -1,5 +1,5 @@
 ---
-// Subpage header — compact, dark, optional full-bleed still with scrim.
+// Subpage header — compact, light, airy. Optional still as a soft faded backdrop.
 interface Props { eyebrow: string; title: string; sub?: string; img?: string; }
 const { eyebrow, title, sub, img } = Astro.props;
 ---
@@ -18,11 +18,11 @@ const { eyebrow, title, sub, img } = Astro.props;
 </section>
 
 <style>
-  .phero { position: relative; overflow: hidden; background: rgb(var(--rgb-bg)); padding-top: 9rem; }
+  .phero { position: relative; overflow: hidden; background: rgb(var(--rgb-bone)); padding-top: 9rem; }
   .phero-inner { position: relative; z-index: 2; padding-bottom: clamp(3rem, 6vw, 5rem); }
   @media (min-width: 768px) { .phero { padding-top: 11rem; } }
   .phero.has-img { padding-top: 11rem; }
   .phero.has-img .phero-inner { padding-bottom: clamp(4rem, 8vw, 7rem); }
-  .phero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.5; }
-  .phero-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgb(var(--rgb-bg)) 0%, rgb(8 7 6 / 0.55) 55%, rgb(8 7 6 / 0.4) 100%); }
+  .phero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.2; }
+  .phero-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgb(var(--rgb-bone)) 30%, rgb(var(--rgb-bone) / 0.4) 100%), linear-gradient(to bottom, rgb(var(--rgb-bone) / 0.5), rgb(var(--rgb-bone))); }
 </style>

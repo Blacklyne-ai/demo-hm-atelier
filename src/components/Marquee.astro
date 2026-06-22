@@ -4,10 +4,10 @@ import { marques } from '../data/site';
 interface Props { heading?: boolean; }
 const { heading = true } = Astro.props;
 ---
-<section class="bg-bg" aria-label="Marques worked on">
+<section class="bg-bone" aria-label="Marques worked on">
   <div class="shell">
     {heading && (
-      <p class="label text-center fade-in" style="color:rgb(var(--rgb-cream-dim))">Reference works · the marques that have come through</p>
+      <p class="label text-center fade-in" style="color:rgb(var(--rgb-stone))">Reference works · the marques that have come through</p>
     )}
     <div class="mq" class:list={[heading && 'mt-7']}>
       <div class="mq-track">
@@ -26,14 +26,14 @@ const { heading = true } = Astro.props;
 </section>
 
 <style>
-  .mq { position: relative; overflow: hidden; padding-block: clamp(0.6rem, 2vw, 1.1rem); border-block: 1px solid var(--hair-soft); }
+  .mq { position: relative; overflow: hidden; padding-block: clamp(0.6rem, 2vw, 1.1rem); border-block: 1px solid var(--hair); }
   .mq-track { display: flex; width: max-content; animation: marqueeScroll 42s linear infinite; }
   .mq-group { display: flex; flex: none; }
-  .mq-item { display: inline-flex; align-items: center; gap: clamp(1.6rem, 4vw, 3rem); padding-inline-end: clamp(1.6rem, 4vw, 3rem); font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 2.1rem); font-weight: 440; letter-spacing: 0.01em; color: rgb(var(--rgb-cream) / 0.55); white-space: nowrap; }
-  .mq-dot { width: 0.4rem; height: 0.4rem; rotate: 45deg; background: rgb(var(--rgb-gold)); flex: none; }
+  .mq-item { display: inline-flex; align-items: center; gap: clamp(1.6rem, 4vw, 3rem); padding-inline-end: clamp(1.6rem, 4vw, 3rem); font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 2.1rem); font-weight: 440; letter-spacing: 0.01em; color: rgb(var(--rgb-graphite)); white-space: nowrap; }
+  .mq-dot { width: 0.4rem; height: 0.4rem; rotate: 45deg; background: rgb(var(--rgb-brass)); flex: none; }
   .mq:hover .mq-track { animation-play-state: paused; }
   .mq-fade { position: absolute; top: 0; bottom: 0; width: 12%; z-index: 2; pointer-events: none; }
-  .mq-fade-l { left: 0; background: linear-gradient(90deg, rgb(var(--rgb-bg)), transparent); }
-  .mq-fade-r { right: 0; background: linear-gradient(270deg, rgb(var(--rgb-bg)), transparent); }
+  .mq-fade-l { left: 0; background: linear-gradient(90deg, rgb(var(--rgb-bone)), transparent); }
+  .mq-fade-r { right: 0; background: linear-gradient(270deg, rgb(var(--rgb-bone)), transparent); }
   @media (prefers-reduced-motion: reduce) { .mq-track { animation: none; } }
 </style>

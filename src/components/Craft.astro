@@ -4,7 +4,7 @@ import { ArrowRight } from '@lucide/astro';
 interface Props { bare?: boolean; }
 const { bare = false } = Astro.props;
 ---
-<section id="craft" class="bg-bg" class:list={[!bare && 'section-pad']} style={bare ? 'padding-bottom:clamp(3rem,6vw,6rem)' : undefined}>
+<section id="craft" class="bg-bone" class:list={[!bare && 'section-pad']} style={bare ? 'padding-bottom:clamp(3rem,6vw,6rem)' : undefined}>
   <div class="shell">
     {!bare && (
       <div class="max-w-3xl">
@@ -25,7 +25,7 @@ const { bare = false } = Astro.props;
           </div>
           <div class="material-body">
             <h3 class="h-md">{m.title}</h3>
-            <p class="mt-2 text-[0.95rem] leading-relaxed" style="color:rgb(var(--rgb-cream) / 0.8)">{m.text}</p>
+            <p class="mt-2 text-[0.95rem] leading-relaxed" style="color:rgb(var(--rgb-graphite))">{m.text}</p>
           </div>
         </article>
       ))}

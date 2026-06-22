@@ -1,0 +1,69 @@
+---
+import { heroLine } from '../data/site';
+import { ArrowRight } from '@lucide/astro';
+---
+<section class="hero">
+  <div class="hero-inner shell">
+    <div class="hero-copy">
+      <p class="eyebrow fade-in">{heroLine.kicker}</p>
+      <h1 class="h-hero hero-title fade-in stagger-1">
+        {heroLine.titleA} <span class="display-italic text-brass-deep">{heroLine.titleB}</span>
+      </h1>
+      <p class="lead measure mt-7 fade-in stagger-2">{heroLine.sub}</p>
+      <div class="mt-9 flex flex-wrap items-center gap-3 fade-in stagger-3">
+        <a href="/work" class="btn btn-primary btn-lg inline-flex" data-magnetic>View the work <ArrowRight size={17} /></a>
+        <a href="/contact" class="btn btn-ghost btn-lg inline-flex">Commission a piece</a>
+      </div>
+    </div>
+
+    <figure class="hero-film fade-in stagger-2">
+      <div class="hero-film-frame">
+        <img src="/media/work/bugatti-chiron.webp" width="640" height="800"
+             alt="Bespoke Bugatti Chiron steering wheel in black leather with red contrast stitching, handcrafted by HM Atelier"
+             fetchpriority="high" decoding="async" />
+        <video data-hero-video class="hero-video" muted loop playsinline preload="none" poster="/media/work/bugatti-chiron.webp">
+          <source src="/media/work/bugatti-chiron.mp4" type="video/mp4" />
+        </video>
+        <span class="hero-corner tl" aria-hidden="true"></span>
+        <span class="hero-corner br" aria-hidden="true"></span>
+      </div>
+      <figcaption class="hero-cap"><span class="hero-cap-dot"></span>Bugatti Chiron · in the atelier</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; background: rgb(var(--rgb-bone)); padding-top: 8.5rem; padding-bottom: 3.5rem; overflow: hidden; }
+  @media (min-width: 1024px) { .hero { min-height: 100svh; display: flex; align-items: center; padding-top: 6rem; padding-bottom: 3rem; } }
+  .hero-inner { width: 100%; display: grid; gap: 2.8rem; align-items: center; }
+  @media (min-width: 1024px) { .hero-inner { grid-template-columns: 1.02fr 0.98fr; gap: 5rem; } }
+
+  .hero-title { margin-top: 1.6rem; max-width: 14ch; }
+
+  .hero-film { margin: 0; justify-self: center; width: 100%; max-width: 27rem; }
+  .hero-film-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: rgb(var(--rgb-surface)); box-shadow: inset 0 0 0 1px rgb(var(--rgb-ink) / 0.08), 0 50px 90px -50px rgb(26 23 20 / 0.45); }
+  .hero-film-frame img, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-video { z-index: 1; opacity: 0; transition: opacity 1s ease; }
+  .hero-video.is-on { opacity: 1; }
+  .hero-corner { position: absolute; width: 24px; height: 24px; z-index: 2; pointer-events: none; }
+  .hero-corner.tl { top: 14px; left: 14px; border-top: 1px solid rgb(var(--rgb-brass)); border-left: 1px solid rgb(var(--rgb-brass)); }
+  .hero-corner.br { bottom: 14px; right: 14px; border-bottom: 1px solid rgb(var(--rgb-brass)); border-right: 1px solid rgb(var(--rgb-brass)); }
+  .hero-cap { margin-top: 1rem; display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-stone)); }
+  .hero-cap-dot { width: 5px; height: 5px; border-radius: 999px; background: rgb(var(--rgb-brass)); flex: none; }
+  @media (max-width: 1023px) { .hero-film { order: -1; max-width: 19rem; } .hero-title { margin-top: 1.2rem; } }
+</style>
+
+<script>
+  // Gentle: autoplay the reel on desktop only (mobile keeps the poster → faster LCP,
+  // less data). Loads on demand; pauses off-screen.
+  const v = document.querySelector('[data-hero-video]') as HTMLVideoElement | null;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const desktop = window.matchMedia('(min-width: 1024px)').matches;
+  if (v && !reduce && desktop) {
+    const play = () => v.play().then(() => v.classList.add('is-on')).catch(() => {});
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (e.isIntersecting) { if (v.preload === 'none') v.load(); play(); } else v.pause();
+    }), { threshold: 0.15 });
+    io.observe(v);
+  }
+</script>
