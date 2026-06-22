@@ -1,10 +1,12 @@
 ---
-// HERO = the transformation. Land on a factory Mercedes-Maybach console; scrolling
-// re-skins it in crocodile (real before → Higgsfield morph). Brand copy over it.
-// Pinned canvas scrub. Graceful fallback: static poster + copy (no JS / reduced-motion).
+// HERO = the transformation, choreographed in two beats inside one pin:
+//  beat 1 (scroll): the console re-skins factory → crocodile (frame scrub), only the
+//          eyebrow + scroll cue are shown.
+//  beat 2 (keep scrolling): the morph holds, a dark overlay fades in and the headline +
+//          CTAs slide up over it (readable). Pinned canvas. Static fallback w/o JS.
 import { heroLine } from '../data/site';
 import { ArrowRight, ArrowDown } from '@lucide/astro';
-const COUNT = 113;
+const COUNT = 124;
 ---
 <section data-hero class="hero" data-hero-count={COUNT}>
   <div data-hero-stage class="hero-stage">
@@ -13,19 +15,22 @@ const COUNT = 113;
          fetchpriority="high" decoding="async" />
     <canvas data-hero-canvas aria-hidden="true"></canvas>
     <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-overlay" data-hero-overlay aria-hidden="true"></div>
 
     <div class="hero-copy shell">
-      <p class="eyebrow eyebrow--center fade-in">{heroLine.kicker}</p>
-      <h1 class="hero-h">{heroLine.titleA} <span class="display-italic">{heroLine.titleB}</span></h1>
-      <p class="hero-sub fade-in stagger-1">{heroLine.sub}</p>
-      <div class="hero-cta fade-in stagger-2">
-        <a href="/work" class="btn btn-light btn-lg inline-flex" data-magnetic>View the work <ArrowRight size={17} /></a>
-        <a href="/contact" class="btn btn-ondark btn-lg inline-flex">Commission a piece</a>
+      <p class="eyebrow eyebrow--center hero-eyebrow">{heroLine.kicker}</p>
+      <div class="hero-reveal" data-hero-reveal>
+        <h1 class="hero-h">{heroLine.titleA} <span class="display-italic">{heroLine.titleB}</span></h1>
+        <p class="hero-sub">{heroLine.sub}</p>
+        <div class="hero-cta">
+          <a href="/work" class="btn btn-light btn-lg inline-flex" data-magnetic>View the work <ArrowRight size={17} /></a>
+          <a href="/contact" class="btn btn-ondark btn-lg inline-flex">Commission a piece</a>
+        </div>
       </div>
-      <p class="hero-cue fade-in stagger-3"><ArrowDown size={15} /> Scroll — factory leather becomes crocodile</p>
     </div>
 
-    <div class="hero-labels" aria-hidden="true">
+    <p class="hero-cue" data-hero-cue><ArrowDown size={15} /> Scroll — factory leather becomes crocodile</p>
+    <div class="hero-labels" data-hero-labels aria-hidden="true">
       <span class="hero-label" data-hero-before>Factory · stock leather</span>
       <span class="hero-label hero-label-after" data-hero-after>HM Atelier · crocodile</span>
     </div>
@@ -36,28 +41,33 @@ const COUNT = 113;
 <style>
   .hero { background: #0c0a08; color: rgb(var(--rgb-bone)); }
   .hero-stage { position: relative; height: 100svh; min-height: 600px; overflow: hidden; background: #0c0a08; }
-  .hero-poster, .hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-poster, .hero-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; will-change: transform; }
   .hero-stage canvas { z-index: 1; }
-  .hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(125% 75% at 50% 30%, transparent 38%, rgb(12 10 8 / 0.5) 100%), linear-gradient(to bottom, rgb(12 10 8 / 0.72) 0%, rgb(12 10 8 / 0.15) 30%, transparent 55%, rgb(12 10 8 / 0.7) 100%); }
+  .hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(130% 80% at 50% 32%, transparent 46%, rgb(12 10 8 / 0.45) 100%), linear-gradient(to bottom, rgb(12 10 8 / 0.5) 0%, transparent 26%, transparent 72%, rgb(12 10 8 / 0.6) 100%); }
+  .hero-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, rgb(10 9 7 / 0.7), rgb(10 9 7 / 0.55) 45%, rgb(10 9 7 / 0.78)); }
 
-  .hero-copy { position: absolute; z-index: 3; top: clamp(7rem, 19vh, 12rem); left: 50%; transform: translateX(-50%); width: 100%; text-align: center; }
-  .hero-h { font-family: var(--font-display); font-weight: 380; font-size: clamp(2.5rem, 6vw, 5.4rem); line-height: 1.0; letter-spacing: -0.02em; color: #fff; margin-top: 1.4rem; text-wrap: balance; max-width: 16ch; margin-inline: auto; text-shadow: 0 2px 40px rgb(0 0 0 / 0.55); }
+  .hero-copy { position: absolute; z-index: 4; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; }
+  .hero-eyebrow { justify-content: center; }
+  .hero-reveal { opacity: 1; }
+  .hero-h { font-family: var(--font-display); font-weight: 380; font-size: clamp(2.5rem, 6vw, 5.4rem); line-height: 1.0; letter-spacing: -0.02em; color: #fff; margin-top: 1.4rem; text-wrap: balance; max-width: 16ch; margin-inline: auto; text-shadow: 0 2px 40px rgb(0 0 0 / 0.5); }
   .hero-h .display-italic { font-style: italic; font-weight: 340; color: rgb(var(--rgb-brass-lite)); }
-  .hero-sub { margin: 1.6rem auto 0; max-width: 40rem; font-size: clamp(1.02rem, 1.3vw, 1.18rem); line-height: 1.6; color: rgb(var(--rgb-bone) / 0.86); text-shadow: 0 1px 18px rgb(0 0 0 / 0.5); }
+  .hero-sub { margin: 1.6rem auto 0; max-width: 40rem; font-size: clamp(1.02rem, 1.3vw, 1.18rem); line-height: 1.6; color: rgb(var(--rgb-bone) / 0.88); text-shadow: 0 1px 18px rgb(0 0 0 / 0.5); }
   .hero-cta { margin-top: 2.2rem; display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
-  .hero-cue { margin-top: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-bone) / 0.6); }
-  .hero-cue :global(svg) { animation: heroBob 2.2s ease-in-out infinite; }
 
-  .hero-labels { position: absolute; z-index: 3; bottom: clamp(2.5rem, 6vh, 4rem); left: 0; right: 0; max-width: 82rem; margin-inline: auto; padding-inline: 1.5rem; display: flex; justify-content: space-between; }
+  .hero-cue { position: absolute; z-index: 4; left: 50%; bottom: clamp(3.4rem, 8vh, 5rem); transform: translateX(-50%); display: inline-flex; align-items: center; gap: 0.5rem; white-space: nowrap; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-bone) / 0.6); }
+  .hero-cue :global(svg) { animation: heroBob 2.2s ease-in-out infinite; }
+  .hero-labels { position: absolute; z-index: 4; bottom: clamp(1.6rem, 4vh, 2.6rem); left: 0; right: 0; max-width: 82rem; margin-inline: auto; padding-inline: 1.5rem; display: flex; justify-content: space-between; }
   @media (min-width: 768px) { .hero-labels { padding-inline: 2.75rem; } }
   .hero-label { font-family: var(--font-sans); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(var(--rgb-bone) / 0.75); transition: opacity 0.4s ease; }
   .hero-label-after { color: rgb(var(--rgb-brass-lite)); opacity: 0.25; }
-  .hero-bar { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: 2px; background: rgb(255 255 255 / 0.12); }
+  .hero-bar { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 2px; background: rgb(255 255 255 / 0.12); }
   .hero-bar span { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: rgb(var(--rgb-brass-lite)); }
 
-  @media (max-width: 700px) { .hero-cue { display: none; } .hero-labels { font-size: 0.62rem; } }
+  @media (max-width: 700px) { .hero-cue { font-size: 0.6rem; letter-spacing: 0.12em; } .hero-labels { font-size: 0.6rem; } }
   @keyframes heroBob { 0%,100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(4px); opacity: 1; } }
   :global(html:not(.js)) .hero-stage canvas { display: none; }
+  /* with JS + motion the reveal starts hidden (set by script); guard for graceful states */
+  :global(html.js) .hero[data-anim] .hero-reveal { opacity: 0; }
 </style>
 
 <script>
@@ -68,7 +78,7 @@ const COUNT = 113;
   const stage = document.querySelector('[data-hero-stage]') as HTMLElement | null;
   const canvas = document.querySelector('[data-hero-canvas]') as HTMLCanvasElement | null;
   if (section && stage && canvas) {
-    const COUNT = parseInt(section.dataset.heroCount || '113', 10);
+    const COUNT = parseInt(section.dataset.heroCount || '124', 10);
     const ctx = canvas.getContext('2d');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isMobile = window.matchMedia('(max-width: 700px)').matches;
@@ -97,29 +107,43 @@ const COUNT = 113;
     poster.onload = resize; poster.src = '/media/transform/poster.webp';
     window.addEventListener('resize', resize, { passive: true });
 
-    // preload frames after first paint (poster is the LCP); ready well before user scrolls
     const preload = () => { for (let i = 0; i < COUNT; i++) { const im = new Image(); im.decoding = 'async'; im.src = url(i); frames[i] = im; } };
     if (document.readyState === 'complete') setTimeout(preload, 200);
     else window.addEventListener('load', () => setTimeout(preload, 200), { once: true });
 
+    const overlay = section.querySelector('[data-hero-overlay]') as HTMLElement | null;
+    const reveal = section.querySelector('[data-hero-reveal]') as HTMLElement | null;
+    const cue = section.querySelector('[data-hero-cue]') as HTMLElement | null;
+    const labels = section.querySelector('[data-hero-labels]') as HTMLElement | null;
     const beforeEl = section.querySelector('[data-hero-before]') as HTMLElement | null;
     const afterEl = section.querySelector('[data-hero-after]') as HTMLElement | null;
     const barEl = section.querySelector('[data-hero-bar]') as HTMLElement | null;
 
     if (!reduce) {
+      section.setAttribute('data-anim', '');           // hides .hero-reveal via CSS until beat 2
       gsap.registerPlugin(ScrollTrigger);
+      const P1 = 0.58;                                  // transformation occupies first ~58%
+      const clamp = (v: number) => Math.max(0, Math.min(1, v));
       ScrollTrigger.create({
-        trigger: section, start: 'top top', end: '+=185%', pin: stage, pinSpacing: true, scrub: 1, invalidateOnRefresh: true,
+        trigger: section, start: 'top top', end: '+=320%', pin: stage, pinSpacing: true, scrub: 1, invalidateOnRefresh: true,
         onUpdate: (self) => {
           const p = self.progress;
-          const idx = Math.min(COUNT - 1, Math.max(0, Math.round(p * (COUNT - 1))));
+          const fp = clamp(p / P1);                     // beat 1 — the re-skin
+          const t2 = clamp((p - P1) / (1 - P1));        // beat 2 — text + overlay
+          const idx = Math.min(COUNT - 1, Math.max(0, Math.round(fp * (COUNT - 1))));
           if (idx !== cur) { cur = idx; render(idx); }
-          if (barEl) barEl.style.transform = `scaleX(${p})`;
-          if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - p * 1.4));
-          if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + p * 1.3));
+          canvas.style.transform = `scale(${1 + fp * 0.06})`;        // gentle push-in for life
+          if (barEl) barEl.style.transform = `scaleX(${fp})`;
+          if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - fp * 1.4) * (1 - t2));
+          if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + fp * 1.3) * (1 - t2));
+          if (cue) cue.style.opacity = String((1 - fp) * 0.9);
+          if (overlay) overlay.style.opacity = String(t2 * 0.82);
+          if (reveal) { reveal.style.opacity = String(t2); reveal.style.transform = `translateY(${(1 - t2) * 30}px)`; }
         },
       });
       ScrollTrigger.refresh();
+    } else if (reveal && overlay) {
+      overlay.style.opacity = '0.55';                   // reduced-motion: readable static hero
     }
   }
 </script>
