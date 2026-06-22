@@ -1,10 +1,10 @@
 ---
 // Reusable before→after scroll-scrub story (factory → bespoke). Multi-instance safe.
 // Frames live in /media/<dir>/{desktop,mobile}/fNNN.webp + /media/<dir>/poster.webp
-interface Props { dir: string; count: number; eyebrow?: string; headline: string; beforeLabel: string; afterLabel: string; alt: string; zoom?: number; zoomOrigin?: string; }
-const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, afterLabel, alt, zoom = 1, zoomOrigin = '50% 50%' } = Astro.props;
+interface Props { dir: string; count: number; eyebrow?: string; headline: string; beforeLabel: string; afterLabel: string; alt: string; zoom?: number; zoomOrigin?: string; autoplay?: boolean; }
+const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, afterLabel, alt, zoom = 1, zoomOrigin = '50% 50%', autoplay = false } = Astro.props;
 ---
-<section class="ts" data-transform-story data-dir={dir} data-count={count} data-zoom={zoom} data-zoom-origin={zoomOrigin}>
+<section class="ts" data-transform-story data-dir={dir} data-count={count} data-zoom={zoom} data-zoom-origin={zoomOrigin} data-autoplay={autoplay}>
   <div class="ts-stage" data-ts-stage>
     <img class="ts-poster" src={`/media/${dir}/poster.webp`} alt={alt} loading="lazy" decoding="async" />
     <canvas data-ts-canvas aria-hidden="true"></canvas>
@@ -88,19 +88,51 @@ const { dir, count, eyebrow = 'The transformation', headline, beforeLabel, after
     const beforeEl = section.querySelector('[data-ts-before]') as HTMLElement | null;
     const afterEl = section.querySelector('[data-ts-after]') as HTMLElement | null;
     const barEl = section.querySelector('[data-ts-bar]') as HTMLElement | null;
+    const autoplay = section.dataset.autoplay === 'true';
 
-    if (!reduce) {
+    const applyProgress = (p: number) => {
+      const idx = Math.min(COUNT - 1, Math.max(0, Math.round(p * (COUNT - 1))));
+      if (idx !== cur) { cur = idx; render(idx); }
+      if (zoom !== 1) canvas.style.transform = `scale(${1 + p * (zoom - 1)})`; // push in toward the detail
+      if (barEl) barEl.style.transform = `scaleX(${p})`;
+      if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - p * 1.4));
+      if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + p * 1.3));
+    };
+
+    if (reduce) {
+      // show the finished state once the section is reached
+      const rio = new IntersectionObserver((es) => {
+        if (!es.some((e) => e.isIntersecting)) return;
+        preload();
+        const w = () => { const last = frames[COUNT - 1]; if (last && last.complete && last.naturalWidth) applyProgress(1); else setTimeout(w, 150); };
+        w(); rio.disconnect();
+      }, { rootMargin: '0px' });
+      rio.observe(section);
+    } else if (autoplay) {
+      // auto-play the morph once when the section scrolls into view (no pin, no scrubbing)
+      applyProgress(0);
+      const state = { p: 0 };
+      let played = false;
+      const play = () => {
+        if (played) return; played = true;
+        gsap.to(state, { p: 1, duration: 4, ease: 'power1.inOut', onUpdate: () => applyProgress(state.p) });
+      };
+      const aio = new IntersectionObserver((es) => {
+        if (!es.some((e) => e.isIntersecting)) return;
+        preload();
+        let waited = 0;
+        const gate = () => {
+          const ready = frames.filter((f) => f && f.complete && f.naturalWidth).length;
+          if (ready >= Math.floor(COUNT * 0.6) || waited >= 2500) play();
+          else { waited += 120; setTimeout(gate, 120); }
+        };
+        gate(); aio.disconnect();
+      }, { threshold: 0.5 });
+      aio.observe(section);
+    } else {
       ScrollTrigger.create({
         trigger: section, start: 'top top', end: '+=185%', pin: stage, pinSpacing: true, scrub: 1, invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const p = self.progress;
-          const idx = Math.min(COUNT - 1, Math.max(0, Math.round(p * (COUNT - 1))));
-          if (idx !== cur) { cur = idx; render(idx); }
-          if (zoom !== 1) canvas.style.transform = `scale(${1 + p * (zoom - 1)})`; // push in toward the detail
-          if (barEl) barEl.style.transform = `scaleX(${p})`;
-          if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - p * 1.4));
-          if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + p * 1.3));
-        },
+        onUpdate: (self) => applyProgress(self.progress),
       });
     }
   });
