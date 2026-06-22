@@ -3,16 +3,23 @@ import { materials } from '../data/site';
 import { ArrowRight } from '@lucide/astro';
 interface Props { bare?: boolean; }
 const { bare = false } = Astro.props;
+// material cards use the elevated studio stills (premium, consistent with the rest)
+const elevated: Record<string, string> = {
+  'crocodile-hide': 'crocodile-console',
+  'leather-cutting': 'ferrari-purosangue',
+  'perforation': 'mclaren-720s',
+  'embroidery': 'porsche-911',
+};
 ---
-<section id="craft" class="bg-bone" class:list={[!bare && 'section-pad']} style={bare ? 'padding-bottom:clamp(3rem,6vw,6rem)' : undefined}>
+<section id="craft" class="bg-bone" class:list={[!bare && 'section-pad']} style={bare ? 'padding-block:clamp(3rem,6vw,6rem)' : undefined}>
   <div class="shell">
     {!bare && (
       <div class="max-w-3xl">
         <p class="eyebrow fade-in">The craft</p>
         <h2 class="h-display mt-5 text-balance fade-in stagger-1" data-rise>It begins with the material.</h2>
         <p class="lead mt-6 fade-in stagger-2">
-          Hide, leather, thread. Everything is hand-selected, cut and stitched in the Dubai atelier — then set into the car
-          so the finish reads as though it always belonged.
+          Hide, leather, thread. Everything is hand-selected, cut and stitched in the Dubai atelier — then set into the
+          car so the finish reads as though it always belonged.
         </p>
       </div>
     )}
@@ -21,7 +28,7 @@ const { bare = false } = Astro.props;
       {materials.map((m, i) => (
         <article class="material fade-in" class:list={[`stagger-${(i % 4) + 1}`]}>
           <div class="material-media">
-            <img src={`/media/craft/${m.img}.webp`} alt={`${m.title} — ${m.text}`} loading="lazy" decoding="async" width="900" height="600" />
+            <img src={`/media/exhibition/${elevated[m.img] ?? m.img}.webp`} alt={`${m.title} — ${m.text}`} loading="lazy" decoding="async" width="900" height="1200" />
           </div>
           <div class="material-body">
             <h3 class="h-md">{m.title}</h3>

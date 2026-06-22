@@ -1,9 +1,10 @@
 ---
-// Editorial slide-in gallery — elevated stills slide in from alternating sides on
-// scroll, paired with text. Uses /media/exhibition/<slug>.webp + work data.
+// Scroll-LINKED slide-in: text one side, elevated still scrubs in from the other
+// side as you scroll (tied to scroll progress), alternating per section.
+// One image per section. Uses /media/exhibition/<slug>.webp + work data.
 import { work } from '../data/site';
 interface Props { slugs: string[]; eyebrow?: string; heading?: string; }
-const { slugs, eyebrow = 'The detail', heading = 'Closer.' } = Astro.props;
+const { slugs, eyebrow = 'The detail', heading = 'Look closer.' } = Astro.props;
 const items = slugs.map((s) => work.find((w) => w.slug === s)).filter(Boolean) as typeof work[number][];
 ---
 <section class="sg section-pad bg-bone">
@@ -14,12 +15,12 @@ const items = slugs.map((s) => work.find((w) => w.slug === s)).filter(Boolean) a
     </div>
 
     <div class="sg-rows">
-      {items.map((w) => (
-        <article class="sg-row" data-sg>
-          <div class="sg-media">
+      {items.map((w, i) => (
+        <article class="sg-row" data-sg data-side={i % 2 === 0 ? 'right' : 'left'}>
+          <div class="sg-media" data-sg-media>
             <img src={`/media/exhibition/${w.slug}.webp`} alt={`${w.marque} — ${w.part}, by HM Atelier`} loading="lazy" decoding="async" width="1280" height="720" />
           </div>
-          <div class="sg-text">
+          <div class="sg-text" data-sg-text>
             <p class="sg-marque">{w.marque}</p>
             <h3 class="sg-title">{w.part}</h3>
             <p class="sg-note">{w.note}</p>
@@ -31,28 +32,45 @@ const items = slugs.map((s) => work.find((w) => w.slug === s)).filter(Boolean) a
 </section>
 
 <style>
-  .sg-rows { margin-top: clamp(3rem, 6vw, 5rem); display: grid; gap: clamp(3.5rem, 7vw, 6.5rem); }
+  .sg-rows { margin-top: clamp(3rem, 6vw, 5.5rem); display: grid; gap: clamp(4rem, 9vw, 9rem); }
   .sg-row { display: grid; gap: 2rem; align-items: center; }
-  @media (min-width: 900px) { .sg-row { grid-template-columns: 1.25fr 1fr; gap: clamp(3rem, 5vw, 5rem); } .sg-row:nth-child(even) .sg-media { order: 2; } }
-  .sg-media { overflow: hidden; border-radius: var(--r-lg); background: #0c0a08; aspect-ratio: 16 / 11; box-shadow: 0 40px 80px -50px rgb(26 23 20 / 0.5); }
+  @media (min-width: 900px) { .sg-row { grid-template-columns: 1.3fr 1fr; gap: clamp(3rem, 5vw, 5.5rem); } .sg-row[data-side="left"] .sg-media { order: 2; } }
+  .sg-media { overflow: hidden; border-radius: var(--r-lg); background: #0c0a08; aspect-ratio: 16 / 11; box-shadow: 0 50px 90px -50px rgb(26 23 20 / 0.55); will-change: transform; }
   .sg-media img { width: 100%; height: 100%; object-fit: cover; }
   .sg-marque { font-family: var(--font-sans); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: rgb(var(--rgb-brass-deep)); }
-  .sg-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.7rem, 3vw, 2.4rem); line-height: 1.08; letter-spacing: -0.015em; color: rgb(var(--rgb-ink)); margin-top: 0.7rem; }
-  .sg-note { margin-top: 1rem; max-width: 34ch; color: rgb(var(--rgb-graphite)); line-height: 1.7; }
-
-  /* slide-in: media from its side, text from the other */
-  .sg-media, .sg-text { opacity: 0; transition: opacity 1s ease, transform 1s cubic-bezier(0.22,1,0.36,1); }
-  .sg-media { transform: translateX(-7%); }
-  .sg-text { transform: translateX(7%); }
-  @media (min-width: 900px) { .sg-row:nth-child(even) .sg-media { transform: translateX(7%); } .sg-row:nth-child(even) .sg-text { transform: translateX(-7%); } }
-  .sg-row.is-in .sg-media, .sg-row.is-in .sg-text { opacity: 1; transform: translateX(0); }
+  .sg-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 3.2vw, 2.6rem); line-height: 1.06; letter-spacing: -0.015em; color: rgb(var(--rgb-ink)); margin-top: 0.7rem; }
+  .sg-note { margin-top: 1.1rem; max-width: 34ch; color: rgb(var(--rgb-graphite)); line-height: 1.7; font-size: 1.05rem; }
+  /* graceful default: visible (JS adds the scroll-linked motion) */
   html:not(.js) .sg-media, html:not(.js) .sg-text { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .sg-media, .sg-text { transition: opacity 0.4s ease; transform: none; } }
 </style>
 
 <script>
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
-  }, { threshold: 0.25 });
-  document.querySelectorAll('[data-sg]').forEach((el) => io.observe(el));
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wide = window.matchMedia('(min-width: 900px)').matches;
+  if (!reduce) {
+    gsap.registerPlugin(ScrollTrigger);
+    document.querySelectorAll<HTMLElement>('[data-sg]').forEach((row) => {
+      const media = row.querySelector('[data-sg-media]') as HTMLElement | null;
+      const text = row.querySelector('[data-sg-text]') as HTMLElement | null;
+      const fromRight = row.dataset.side === 'right';
+      if (media) {
+        // desktop: slide in horizontally from its side · mobile: fade + gentle rise (no x overflow)
+        const fromX = wide ? (fromRight ? 26 : -26) : 0;
+        const fromY = wide ? 0 : 32;
+        gsap.fromTo(media,
+          { xPercent: fromX, yPercent: fromY ? 6 : 0, opacity: 0 },
+          { xPercent: 0, yPercent: 0, opacity: 1, ease: 'none',
+            scrollTrigger: { trigger: row, start: 'top bottom', end: wide ? 'center center' : 'center 70%', scrub: 1 } });
+      }
+      if (text) {
+        gsap.fromTo(text,
+          { opacity: 0, y: 28 },
+          { opacity: 1, y: 0, ease: 'power2.out',
+            scrollTrigger: { trigger: row, start: 'top 78%', end: 'top 46%', scrub: 1 } });
+      }
+    });
+    ScrollTrigger.refresh();
+  }
 </script>

@@ -4,10 +4,10 @@ import { process } from '../data/site';
 interface Props { bare?: boolean; }
 const { bare = false } = Astro.props;
 const imgs = [
-  '/media/work/rolls-royce-wheel.webp',
-  '/media/craft/crocodile-hide.webp',
-  '/media/craft/stitching.webp',
-  '/media/work/bugatti-chiron.webp',
+  '/media/exhibition/rolls-royce-wheel.webp',
+  '/media/exhibition/crocodile-console.webp',
+  '/media/exhibition/ferrari-purosangue.webp',
+  '/media/exhibition/bugatti-chiron.webp',
 ];
 ---
 <section id="process" class="bg-bone" class:list={[!bare && 'section-pad']} style={bare ? 'padding-block:clamp(3rem,6vw,6rem)' : undefined}>

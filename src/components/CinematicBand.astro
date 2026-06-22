@@ -5,7 +5,7 @@ interface Props { img?: string; statement: string; sub?: string; alt: string; al
 const { img = 'crocodile-hide', statement, sub, alt, align = 'left' } = Astro.props;
 ---
 <section class="cine" data-parallax-wrap>
-  <img class="cine-bg" src={`/media/craft/${img}.webp`} alt={alt} loading="lazy" decoding="async" data-parallax-bg />
+  <img class="cine-bg" src={`/media/exhibition/${img}.webp`} alt={alt} loading="lazy" decoding="async" data-parallax-bg />
   <div class="cine-scrim" class:list={[align === 'center' && 'is-center']} aria-hidden="true"></div>
   <div class="shell cine-inner" class:list={[align === 'center' && 'text-center']}>
     <p class="h-display text-balance cine-statement fade-in" data-rise>{statement}</p>
