@@ -1,12 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHero from '../components/PageHero.astro';
-import WorkGrid from '../components/WorkGrid.astro';
+import WorkExhibition from '../components/WorkExhibition.astro';
 import Marquee from '../components/Marquee.astro';
-import CinematicBand from '../components/CinematicBand.astro';
 import { services } from '../data/site';
-import { Disc3, Armchair, PanelTop, Layers, KeyRound, Sparkles, Play } from '@lucide/astro';
+import { Disc3, Armchair, PanelTop, Layers, KeyRound, Sparkles } from '@lucide/astro';
 const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound, Sparkles };
+const allWork = ['bugatti-chiron', 'crocodile-console', 'ferrari-purosangue', 'mclaren-720s', 'porsche-911', 'lamborghini-urus', 'rolls-royce-wheel'];
 ---
 <Layout
   title="Work · HM Atelier"
@@ -16,29 +16,16 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
   <PageHero
     eyebrow="Selected work"
     title="The work."
-    sub="Steering wheels, seats, consoles, key cases — rebuilt by hand in leather, exotic hides and embroidery. Hover or tap a piece to watch it move."
-    img="/media/work/crocodile-console.webp"
+    sub="Steering wheels, seats, consoles, hides — rebuilt by hand. Each piece, shot as it deserves."
   />
 
-  <section class="section-pad bg-bone" style="padding-top:0;">
-    <div class="shell">
-      <WorkGrid />
-      <p class="mt-8 text-sm fade-in" style="color:rgb(var(--rgb-stone))">
-        Marque names denote reference works — interiors commissioned and rebuilt by the atelier. All trademarks belong to their respective owners.
-      </p>
-    </div>
-  </section>
-
-  <CinematicBand
-    img="perforation"
-    statement="What we make."
-    sub="Six things, done to one standard."
-    alt="Diamond-perforated leather seat handcrafted by HM Atelier"
-  />
+  <WorkExhibition slugs={allWork} showIntro={false} />
 
   <section class="section-pad bg-bone">
     <div class="shell">
-      <div class="svc-grid">
+      <p class="eyebrow fade-in">What we make</p>
+      <h2 class="h-display mt-5 text-balance fade-in stagger-1">Six things, one standard.</h2>
+      <div class="svc-grid mt-12">
         {services.map((s, i) => {
           const Icon = Icons[s.icon];
           return (
@@ -50,6 +37,9 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
           );
         })}
       </div>
+      <p class="mt-10 text-sm fade-in" style="color:rgb(var(--rgb-stone))">
+        Marque names denote reference works — interiors commissioned and rebuilt by the atelier. All trademarks belong to their respective owners.
+      </p>
     </div>
   </section>
 
@@ -60,7 +50,7 @@ const Icons: Record<string, any> = { Disc3, Armchair, PanelTop, Layers, KeyRound
   .svc-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
   @media (min-width: 640px) { .svc-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (min-width: 960px) { .svc-grid { grid-template-columns: repeat(3, 1fr); } }
-  .svc-card { padding: 1.8rem; border-radius: var(--r-lg); border: 1px solid var(--hair); background: rgb(var(--rgb-surface)); transition: border-color 0.3s ease, transform 0.4s ease; }
-  .svc-card:hover { border-color: rgb(var(--rgb-brass) / 0.4); transform: translateY(-3px); }
-  .svc-ico { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: var(--r-md); background: rgb(var(--rgb-brass) / 0.12); color: rgb(var(--rgb-brass-deep)); border: 1px solid rgb(var(--rgb-brass) / 0.28); }
+  .svc-card { padding: 1.8rem; border-radius: var(--r-lg); background: rgb(var(--rgb-surface)); box-shadow: inset 0 0 0 1px rgb(var(--rgb-ink) / 0.06); transition: box-shadow 0.4s ease, transform 0.4s ease; }
+  .svc-card:hover { box-shadow: inset 0 0 0 1px rgb(var(--rgb-brass) / 0.45); transform: translateY(-3px); }
+  .svc-ico { display: inline-flex; align-items: center; justify-content: center; width: 50px; height: 50px; border-radius: var(--r-md); background: rgb(var(--rgb-brass) / 0.12); color: rgb(var(--rgb-brass-deep)); box-shadow: inset 0 0 0 1px rgb(var(--rgb-brass) / 0.28); }
 </style>

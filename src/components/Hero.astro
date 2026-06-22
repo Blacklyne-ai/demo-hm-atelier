@@ -18,12 +18,9 @@ import { ArrowRight } from '@lucide/astro';
 
     <figure class="hero-film fade-in stagger-2">
       <div class="hero-film-frame">
-        <img src="/media/work/bugatti-chiron.webp" width="640" height="800"
+        <img src="/media/exhibition/bugatti-chiron.webp" width="960" height="1200"
              alt="Bespoke Bugatti Chiron steering wheel in black leather with red contrast stitching, handcrafted by HM Atelier"
              fetchpriority="high" decoding="async" />
-        <video data-hero-video class="hero-video" muted loop playsinline preload="none" poster="/media/work/bugatti-chiron.webp">
-          <source src="/media/work/bugatti-chiron.mp4" type="video/mp4" />
-        </video>
         <span class="hero-corner tl" aria-hidden="true"></span>
         <span class="hero-corner br" aria-hidden="true"></span>
       </div>
@@ -41,29 +38,14 @@ import { ArrowRight } from '@lucide/astro';
   .hero-title { margin-top: 1.6rem; max-width: 14ch; }
 
   .hero-film { margin: 0; justify-self: center; width: 100%; max-width: 27rem; }
-  .hero-film-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: rgb(var(--rgb-surface)); box-shadow: inset 0 0 0 1px rgb(var(--rgb-ink) / 0.08), 0 50px 90px -50px rgb(26 23 20 / 0.45); }
-  .hero-film-frame img, .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .hero-video { z-index: 1; opacity: 0; transition: opacity 1s ease; }
-  .hero-video.is-on { opacity: 1; }
+  .hero-film-frame { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-lg); background: #0c0a08; box-shadow: inset 0 0 0 1px rgb(var(--rgb-ink) / 0.08), 0 50px 90px -50px rgb(26 23 20 / 0.45); }
+  .hero-film-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); animation: heroKen 18s ease-out forwards; }
   .hero-corner { position: absolute; width: 24px; height: 24px; z-index: 2; pointer-events: none; }
   .hero-corner.tl { top: 14px; left: 14px; border-top: 1px solid rgb(var(--rgb-brass)); border-left: 1px solid rgb(var(--rgb-brass)); }
   .hero-corner.br { bottom: 14px; right: 14px; border-bottom: 1px solid rgb(var(--rgb-brass)); border-right: 1px solid rgb(var(--rgb-brass)); }
   .hero-cap { margin-top: 1rem; display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-stone)); }
   .hero-cap-dot { width: 5px; height: 5px; border-radius: 999px; background: rgb(var(--rgb-brass)); flex: none; }
   @media (max-width: 1023px) { .hero-film { order: -1; max-width: 19rem; } .hero-title { margin-top: 1.2rem; } }
+  @keyframes heroKen { from { transform: scale(1.04); } to { transform: scale(1.1); } }
+  @media (prefers-reduced-motion: reduce) { .hero-film-frame img { animation: none; } }
 </style>
-
-<script>
-  // Gentle: autoplay the reel on desktop only (mobile keeps the poster → faster LCP,
-  // less data). Loads on demand; pauses off-screen.
-  const v = document.querySelector('[data-hero-video]') as HTMLVideoElement | null;
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const desktop = window.matchMedia('(min-width: 1024px)').matches;
-  if (v && !reduce && desktop) {
-    const play = () => v.play().then(() => v.classList.add('is-on')).catch(() => {});
-    const io = new IntersectionObserver((es) => es.forEach((e) => {
-      if (e.isIntersecting) { if (v.preload === 'none') v.load(); play(); } else v.pause();
-    }), { threshold: 0.15 });
-    io.observe(v);
-  }
-</script>
