@@ -47,10 +47,10 @@ const COUNT = 97;
   /* black bar behind the nav so the tight top edge of the video reads clean; fades on scroll */
   .hero-topmask { position: absolute; top: 0; left: 0; right: 0; z-index: 5; pointer-events: none; height: clamp(92px, 15vh, 170px); background: linear-gradient(to bottom, #0c0a08 0%, #0c0a08 44%, rgb(12 10 8 / 0) 100%); }
   .hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(130% 80% at 50% 32%, transparent 46%, rgb(12 10 8 / 0.45) 100%), linear-gradient(to bottom, rgb(12 10 8 / 0.5) 0%, transparent 26%, transparent 72%, rgb(12 10 8 / 0.6) 100%); }
-  .hero-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: linear-gradient(to bottom, rgb(10 9 7 / 0.7), rgb(10 9 7 / 0.55) 45%, rgb(10 9 7 / 0.78)); }
+  .hero-overlay { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; background: radial-gradient(120% 90% at 50% 50%, rgb(8 7 5 / 0.74) 0%, rgb(8 7 5 / 0.9) 100%), linear-gradient(to bottom, rgb(8 7 5 / 0.86), rgb(8 7 5 / 0.66) 45%, rgb(8 7 5 / 0.9)); }
 
   .hero-copy { position: absolute; z-index: 4; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; }
-  .hero-eyebrow { justify-content: center; }
+  .hero-eyebrow { justify-content: center; color: rgb(var(--rgb-brass-lite)); text-shadow: 0 1px 3px rgb(0 0 0 / 0.92), 0 2px 22px rgb(0 0 0 / 0.7); }
   .hero-reveal { opacity: 1; }
   .hero-h { font-family: var(--font-display); font-weight: 380; font-size: clamp(2.5rem, 6vw, 5.4rem); line-height: 1.0; letter-spacing: -0.02em; color: #fff; margin-top: 1.4rem; text-wrap: balance; max-width: 16ch; margin-inline: auto; text-shadow: 0 2px 40px rgb(0 0 0 / 0.5); }
   .hero-h .display-italic { font-style: italic; font-weight: 340; color: rgb(var(--rgb-brass-lite)); }
@@ -144,13 +144,13 @@ const COUNT = 97;
           if (beforeEl) beforeEl.style.opacity = String(Math.max(0.2, 1 - fp * 1.4) * (1 - t2));
           if (afterEl) afterEl.style.opacity = String(Math.min(1, 0.25 + fp * 1.3) * (1 - t2));
           if (cue) cue.style.opacity = String((1 - fp) * 0.9);
-          if (overlay) overlay.style.opacity = String(t2 * 0.82);
+          if (overlay) overlay.style.opacity = String(t2 * 0.96);
           if (reveal) { reveal.style.opacity = String(t2); reveal.style.transform = `translateY(${(1 - t2) * 30}px)`; }
         },
       });
       ScrollTrigger.refresh();
     } else if (reveal && overlay) {
-      overlay.style.opacity = '0.55';                   // reduced-motion: readable static hero
+      overlay.style.opacity = '0.74';                   // reduced-motion: readable static hero
     }
   }
 </script>
