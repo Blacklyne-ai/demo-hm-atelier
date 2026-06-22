@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HeroScrub from '../components/HeroScrub.astro';
+import SpecStrip from '../components/SpecStrip.astro';
+import WorkShowcase from '../components/WorkShowcase.astro';
+import CinematicBand from '../components/CinematicBand.astro';
+import Craft from '../components/Craft.astro';
+import CraftSequence from '../components/CraftSequence.astro';
+import Marquee from '../components/Marquee.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+---
+<Layout
+  title="HM Atelier · Bespoke luxury automotive interiors · Dubai"
+  current="/"
+  heroPoster="/media/hero/poster.webp"
+>
+  <HeroScrub />
+  <SpecStrip />
+  <WorkShowcase />
+  <CinematicBand
+    img="leather-cutting"
+    statement="Chosen by hand. Cut once. Stitched to the millimetre."
+    sub="No catalogue, no shortcuts — only the material, the hand and the car it is made for."
+    alt="Hands cutting and skiving leather by hand in the HM Atelier workshop"
+  />
+  <Craft />
+  <CraftSequence />
+  <Marquee />
+  <About />
+  <CinematicBand
+    img="crocodile-hide"
+    align="center"
+    statement="Bring us the car."
+    sub="We take it from there — handcrafted in Dubai, for collectors and showrooms anywhere in the world."
+    alt="Crocodile-leather centre console handcrafted by HM Atelier"
+  />
+  <Contact />
+</Layout>

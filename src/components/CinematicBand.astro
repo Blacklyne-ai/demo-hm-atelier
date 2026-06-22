@@ -1,0 +1,23 @@
+---
+// Full-bleed editorial breather — real craft still, parallax, single statement.
+interface Props { img?: string; statement: string; sub?: string; alt: string; align?: 'left' | 'center'; }
+const { img = 'crocodile-hide', statement, sub, alt, align = 'left' } = Astro.props;
+---
+<section class="cine" data-parallax-wrap>
+  <img class="cine-bg" src={`/media/craft/${img}.webp`} alt={alt} loading="lazy" decoding="async" data-parallax-bg />
+  <div class="cine-scrim" class:list={[align === 'center' && 'is-center']} aria-hidden="true"></div>
+  <div class="shell cine-inner" class:list={[align === 'center' && 'text-center']}>
+    <p class="h-display text-balance text-cream fade-in" data-rise>{statement}</p>
+    {sub && <p class="lead mt-6 fade-in stagger-1" class:list={[align === 'center' ? 'mx-auto max-w-2xl' : 'measure']} style="color:rgb(var(--rgb-cream) / 0.82)">{sub}</p>}
+  </div>
+</section>
+
+<style>
+  .cine { position: relative; overflow: hidden; min-height: 68svh; display: flex; align-items: center; background: rgb(var(--rgb-bg)); }
+  .cine-bg { position: absolute; inset: -10% 0; width: 100%; height: 120%; object-fit: cover; z-index: 0; }
+  .cine-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgb(8 7 6 / 0.92) 0%, rgb(8 7 6 / 0.6) 48%, rgb(8 7 6 / 0.2) 100%); }
+  .cine-scrim.is-center { background: radial-gradient(110% 90% at 50% 50%, rgb(8 7 6 / 0.5) 0%, rgb(8 7 6 / 0.86) 100%); }
+  .cine-inner { position: relative; z-index: 2; padding-block: 6rem; }
+  .cine-inner p.h-display { max-width: 19ch; }
+  .cine-inner.text-center p.h-display { margin-inline: auto; }
+</style>

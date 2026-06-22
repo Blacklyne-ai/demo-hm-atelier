@@ -1,0 +1,15 @@
+---
+import { specs } from '../data/site';
+---
+<section class="bg-bg" aria-label="At a glance">
+  <div class="shell">
+    <div class="spec-strip fade-in" style="border-right:1px solid var(--hair-soft); border-bottom:1px solid var(--hair-soft);">
+      {specs.map((s) => (
+        <div class="spec">
+          <p class="spec-v">{s.v}</p>
+          <p class="spec-k">{s.k}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

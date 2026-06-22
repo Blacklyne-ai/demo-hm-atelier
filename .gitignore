@@ -1,0 +1,31 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# macOS-generated files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# QA / scratch (kept out of repo)
+docs/qa/
+docs/_*
+.src-photos/
+.src-media/
+*.local
+dev.log
+*.log

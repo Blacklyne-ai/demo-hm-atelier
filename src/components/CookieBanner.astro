@@ -1,0 +1,39 @@
+---
+// Privacy notice. This static site sets no tracking cookies; consent is only
+// logged locally (localStorage). Hidden inside an iframe embed (demo previews).
+import { ShieldCheck } from '@lucide/astro';
+---
+<div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[60] p-3 md:p-4 translate-y-[150%] transition-transform duration-500" style="will-change: transform;">
+  <div class="shell">
+    <div class="flex flex-col gap-4 rounded-lg border border-line bg-surface p-5 md:flex-row md:items-center md:gap-6" style="box-shadow: var(--shadow-lift);">
+      <div class="flex-1">
+        <p class="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-cream">
+          <ShieldCheck size={15} class="text-gold" />
+          Privacy
+        </p>
+        <p class="text-[0.84rem] leading-relaxed" style="color:rgb(var(--rgb-cream) / 0.7)">
+          We use only technically necessary cookies to keep this site working — no tracking, no analytics without your consent. More in our
+          <a href="/privacy" class="font-semibold text-gold underline underline-offset-2">privacy notice</a>.
+        </p>
+      </div>
+      <div class="flex flex-shrink-0 gap-2.5">
+        <button id="cookie-ok" class="btn btn-primary px-6 py-2.5 text-sm">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'hm-cookie-consent';
+  const banner = document.getElementById('cookie-banner');
+  const inIframe = window.self !== window.top;
+  const show = () => banner && (banner.style.transform = 'translateY(0)');
+  const hide = () => banner && (banner.style.transform = 'translateY(150%)');
+  let stored = 'shown';
+  try { stored = localStorage.getItem(KEY) || ''; } catch {}
+  if (!stored && !inIframe) setTimeout(show, 1100);
+  document.getElementById('cookie-ok')?.addEventListener('click', () => {
+    try { localStorage.setItem(KEY, 'ok'); } catch {}
+    hide();
+  });
+</script>

@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import About from '../components/About.astro';
+import Marquee from '../components/Marquee.astro';
+import CinematicBand from '../components/CinematicBand.astro';
+---
+<Layout
+  title="About Haroon Murtaza · HM Atelier"
+  description="HM Atelier is the work of Haroon Murtaza — a Dubai workshop devoted entirely to bespoke interiors for the world's most exclusive cars."
+  current="/about"
+>
+  <PageHero
+    eyebrow="The atelier"
+    title="The hand behind the work."
+    sub="A Dubai workshop given over entirely to one thing — the inside of extraordinary cars."
+  />
+  <About full={true} />
+  <CinematicBand
+    img="stitching"
+    statement="Devoted to one thing, done completely."
+    sub="The inside of the car — nothing else, nothing catalogued, nothing repeated."
+    alt="Contrast stitching detail on leather by HM Atelier"
+  />
+  <Marquee />
+</Layout>

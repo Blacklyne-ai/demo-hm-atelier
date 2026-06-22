@@ -1,0 +1,46 @@
+---
+import { materials } from '../data/site';
+import { ArrowRight } from '@lucide/astro';
+interface Props { bare?: boolean; }
+const { bare = false } = Astro.props;
+---
+<section id="craft" class="bg-bg" class:list={[!bare && 'section-pad']} style={bare ? 'padding-bottom:clamp(3rem,6vw,6rem)' : undefined}>
+  <div class="shell">
+    {!bare && (
+      <div class="max-w-3xl">
+        <p class="eyebrow fade-in">The craft</p>
+        <h2 class="h-display mt-5 text-balance fade-in stagger-1" data-rise>It begins with the material.</h2>
+        <p class="lead mt-6 fade-in stagger-2">
+          Hide, leather, thread. Everything is hand-selected, cut and stitched in the Dubai atelier — then set into the car
+          so the finish reads as though it always belonged.
+        </p>
+      </div>
+    )}
+
+    <div class="materials-grid" class:list={[bare ? 'mt-0' : 'mt-12 md:mt-16']}>
+      {materials.map((m, i) => (
+        <article class="material fade-in" class:list={[`stagger-${(i % 4) + 1}`]}>
+          <div class="material-media">
+            <img src={`/media/craft/${m.img}.webp`} alt={`${m.title} — ${m.text}`} loading="lazy" decoding="async" width="900" height="600" />
+          </div>
+          <div class="material-body">
+            <h3 class="h-md">{m.title}</h3>
+            <p class="mt-2 text-[0.95rem] leading-relaxed" style="color:rgb(var(--rgb-cream) / 0.8)">{m.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {!bare && (
+      <div class="mt-10 fade-in">
+        <a href="/craft" class="arrow-link">How a commission is made <ArrowRight size={15} /></a>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .materials-grid { display: grid; gap: 1.1rem; grid-template-columns: 1fr; }
+  @media (min-width: 600px) { .materials-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .materials-grid { grid-template-columns: repeat(4, 1fr); } }
+</style>

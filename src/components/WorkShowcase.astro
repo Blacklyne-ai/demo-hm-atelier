@@ -1,0 +1,23 @@
+---
+import WorkGrid from './WorkGrid.astro';
+import { ArrowRight, Play } from '@lucide/astro';
+---
+<section id="work-intro" class="section-pad bg-bg">
+  <div class="shell">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="eyebrow fade-in">Selected work</p>
+        <h2 class="h-display mt-5 text-balance fade-in stagger-1" data-rise>Recent commissions.</h2>
+        <p class="lead measure mt-5 fade-in stagger-2">
+          A few of the cars that have passed through the atelier — wheels, seats, consoles and hides.
+          <span class="inline-flex items-center gap-1.5 text-gold"><Play size={13} fill="currentColor" /> hover or tap to watch.</span>
+        </p>
+      </div>
+      <a href="/work" class="arrow-link fade-in stagger-2 mb-2">All work <ArrowRight size={15} /></a>
+    </div>
+
+    <div class="mt-12 md:mt-14">
+      <WorkGrid limit={6} />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,144 @@
+---
+import { heroLine } from '../data/site';
+import { ArrowRight, ArrowDown } from '@lucide/astro';
+const HERO_COUNT = 124; // frames in /public/media/hero/{desktop,mobile}
+---
+<section data-hero class="hero" data-hero-count={HERO_COUNT}>
+  <div class="hero-amb" style="background-image:url(/media/hero/poster-blur.webp)" aria-hidden="true"></div>
+
+  <div class="hero-inner shell">
+    <div class="hero-copy">
+      <p class="eyebrow fade-in">{heroLine.kicker}</p>
+      <h1 class="h-hero hero-title">
+        {heroLine.titleA} <span class="display-italic text-gold">{heroLine.titleB}</span>
+      </h1>
+      <p class="lead measure mt-6 fade-in stagger-1">{heroLine.sub}</p>
+      <div class="mt-9 flex flex-wrap items-center gap-3 fade-in stagger-2">
+        <a href="/work" class="btn btn-primary btn-pill btn-lg" data-magnetic>View the work <ArrowRight size={17} /></a>
+        <a href="/contact" class="btn btn-ghost btn-pill btn-lg">Commission a piece</a>
+      </div>
+    </div>
+
+    <div class="hero-film" data-hero-film>
+      <img class="hero-poster" src="/media/hero/poster.webp" width="720" height="1280"
+           alt="Bespoke Bugatti Chiron steering wheel in black leather with red contrast stitching, handcrafted by HM Atelier" fetchpriority="high" decoding="async" />
+      <canvas data-hero-canvas aria-hidden="true"></canvas>
+      <span class="hero-film-corner tl" aria-hidden="true"></span>
+      <span class="hero-film-corner br" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <a href="#work-intro" class="hero-scrollhint fade-in stagger-3" aria-label="Scroll">
+    <span class="label">Scroll</span><ArrowDown size={15} />
+  </a>
+</section>
+
+<style>
+  .hero { position: relative; height: 100svh; min-height: 600px; display: flex; align-items: center; overflow: hidden; background: rgb(var(--rgb-bg)); }
+  .hero-amb { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.45; z-index: 0; transform: scale(1.1); }
+  .hero-amb::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 70% 30%, transparent 0%, rgb(var(--rgb-bg) / 0.55) 60%, rgb(var(--rgb-bg)) 100%); }
+
+  .hero-inner { position: relative; z-index: 2; width: 100%; display: grid; gap: 2.5rem; align-items: center; padding-top: 5rem; }
+  @media (min-width: 1024px) { .hero-inner { grid-template-columns: 1.05fr 0.95fr; gap: 4rem; padding-top: 4rem; } }
+
+  .hero-title { margin-top: 1.5rem; max-width: 13ch; }
+  .hero-copy { will-change: transform; }
+
+  .hero-film { position: relative; justify-self: center; width: min(78vw, 30rem); aspect-ratio: 3 / 4; border-radius: var(--r-lg); overflow: hidden; border: 1px solid rgb(var(--rgb-cream) / 0.1); box-shadow: 0 50px 120px -50px rgb(0 0 0 / 0.9); background: rgb(var(--rgb-surface-2)); }
+  @media (min-width: 1024px) { .hero-film { width: 100%; max-width: 30rem; aspect-ratio: 4 / 5; max-height: 78svh; } }
+  .hero-poster, .hero-film canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-film canvas { z-index: 1; }
+  .hero-film-corner { position: absolute; width: 26px; height: 26px; z-index: 2; pointer-events: none; opacity: 0.7; }
+  .hero-film-corner.tl { top: 12px; left: 12px; border-top: 1px solid rgb(var(--rgb-gold)); border-left: 1px solid rgb(var(--rgb-gold)); }
+  .hero-film-corner.br { bottom: 12px; right: 12px; border-bottom: 1px solid rgb(var(--rgb-gold)); border-right: 1px solid rgb(var(--rgb-gold)); }
+
+  .hero-scrollhint { position: absolute; left: 50%; bottom: 1.6rem; transform: translateX(-50%); z-index: 3; display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem; color: rgb(var(--rgb-cream) / 0.55); transition: color 0.25s ease; }
+  .hero-scrollhint:hover { color: rgb(var(--rgb-gold)); }
+  .hero-scrollhint :global(svg) { animation: heroHint 2.2s ease-in-out infinite; }
+
+  /* ── Mobile/tablet: contained film panel on top, copy on solid black below ── */
+  @media (max-width: 1023px) {
+    .hero { height: auto; min-height: 100svh; align-items: stretch; }
+    .hero-amb { display: none; }
+    .hero-inner { grid-template-columns: 1fr; align-content: center; gap: 2.2rem; min-height: 100svh; padding-top: 6.5rem; padding-bottom: 4rem; }
+    .hero-film { order: -1; justify-self: center; width: min(70vw, 20rem); max-width: 20rem; aspect-ratio: 4 / 5; max-height: 46svh; }
+    .hero-film-corner { display: none; }
+    .hero-title { margin-top: 1.2rem; }
+    .hero-scrollhint { display: none; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const section = document.querySelector('[data-hero]') as HTMLElement | null;
+  const canvas = document.querySelector('[data-hero-canvas]') as HTMLCanvasElement | null;
+  if (section && canvas) {
+    const COUNT = parseInt(section.dataset.heroCount || '124', 10);
+    const ctx = canvas.getContext('2d');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 700px)').matches;
+    const dir = isMobile ? '/media/hero/mobile' : '/media/hero/desktop';
+    const url = (i: number) => `${dir}/f${String(i + 1).padStart(3, '0')}.webp`;
+
+    const frames: HTMLImageElement[] = new Array(COUNT);
+    const poster = new Image();
+    let cur = -1, cssW = 0, cssH = 0;
+
+    const drawCover = (img: HTMLImageElement) => {
+      if (!ctx || !img.complete || !img.naturalWidth) return;
+      const s = Math.max(cssW / img.naturalWidth, cssH / img.naturalHeight);
+      const w = img.naturalWidth * s, h = img.naturalHeight * s;
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.drawImage(img, (cssW - w) / 2, (cssH - h) / 2, w, h);
+    };
+    const render = (idx: number) => {
+      const img = frames[idx] && frames[idx].complete ? frames[idx] : poster;
+      if (img && img.complete) drawCover(img);
+    };
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cssW = r.width; cssH = r.height;
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+      ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render(cur < 0 ? 0 : cur);
+    };
+
+    poster.onload = () => { resize(); };
+    poster.src = '/media/hero/poster.webp';
+    window.addEventListener('resize', resize, { passive: true });
+
+    // Preload frames after load; scrub falls back to nearest/poster until ready
+    const preload = () => {
+      for (let i = 0; i < COUNT; i++) {
+        const im = new Image();
+        im.decoding = 'async';
+        im.src = url(i);
+        frames[i] = im;
+      }
+    };
+    if (document.readyState === 'complete') preload();
+    else window.addEventListener('load', preload, { once: true });
+
+    if (!reduce) {
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: '+=135%',
+        pin: true,
+        pinSpacing: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const idx = Math.min(COUNT - 1, Math.max(0, Math.round(self.progress * (COUNT - 1))));
+          if (idx !== cur) { cur = idx; render(idx); }
+        },
+      });
+      ScrollTrigger.refresh();
+    }
+  }
+</script>

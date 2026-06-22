@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Contact from '../components/Contact.astro';
+---
+<Layout
+  title="Commission · HM Atelier"
+  description="Commission a bespoke interior with HM Atelier, Dubai. Direct lines by WhatsApp, telephone and Instagram — for collectors and showrooms worldwide."
+  current="/contact"
+>
+  <PageHero
+    eyebrow="Commission"
+    title="Commission your interior."
+    sub="Tell us the car and what you have in mind. Every commission is taken on directly with the atelier."
+    img="/media/work/bugatti-chiron.webp"
+  />
+  <Contact full={true} />
+</Layout>

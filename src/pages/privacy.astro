@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import { site } from '../data/site';
+---
+<Layout title="Privacy notice · HM Atelier" current="/privacy" noindex={true}>
+  <PageHero eyebrow="Privacy" title="Privacy notice." />
+  <section class="section-pad bg-bg" style="padding-top:0;">
+    <div class="shell-narrow legal-prose fade-in">
+      <h2>Overview</h2>
+      <p>
+        This is a static website. It sets <strong>no tracking or advertising cookies</strong> and runs no analytics.
+        We collect personal data only when you contact us directly.
+      </p>
+
+      <h2>Local storage</h2>
+      <p>
+        If you dismiss the privacy notice, a single value is stored in your browser's local storage to remember that
+        choice. It is never sent to a server and contains no personal data.
+      </p>
+
+      <h2>Contacting us</h2>
+      <p>
+        When you reach us by WhatsApp, telephone or Instagram, the information you share is processed to respond to your
+        enquiry. Messages sent through WhatsApp or Instagram are also subject to those platforms' own privacy policies.
+      </p>
+
+      <h2>Hosting</h2>
+      <p>
+        This site is hosted on Cloudflare Pages. The host may process technical connection data (such as IP address and
+        browser type) in server logs for the purpose of delivering and securing the site.
+      </p>
+
+      <h2>Your rights</h2>
+      <p>
+        You may request information about, correction of, or deletion of any personal data you have shared with us. To
+        do so, contact us on {site.phone} or via {site.instagramHandle}.
+      </p>
+
+      <p style="margin-top:2.5rem; color:rgb(var(--rgb-cream-dim)); font-size:0.9rem;">
+        This notice will be finalised with the operator's confirmed legal details before launch.
+      </p>
+    </div>
+  </section>
+</Layout>

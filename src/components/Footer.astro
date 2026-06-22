@@ -1,0 +1,98 @@
+---
+import { site, nav } from '../data/site';
+import Logo from './Logo.astro';
+import { MessageCircle } from '@lucide/astro';
+const year = new Date().getFullYear();
+const chips = ['Bespoke', 'Exotic hides', 'Handcrafted in Dubai'];
+---
+<footer class="footer">
+  <div class="footer-accent" aria-hidden="true"></div>
+  <div class="shell">
+    <div class="grid gap-10 border-b border-line/60 py-14 md:py-16 lg:grid-cols-12 lg:items-start lg:gap-12">
+      <div class="lg:col-span-7">
+        <a href="/" class="inline-flex items-center gap-3">
+          <Logo class="h-12 w-auto md:h-14" variant="cream" />
+          <span class="footer-word">HM&nbsp;Atelier</span>
+        </a>
+        <p class="mt-7 max-w-md leading-relaxed" style="color:rgb(var(--rgb-cream) / 0.74)">
+          Bespoke luxury automotive interiors, handcrafted in Dubai — fine leather, exotic hides and hand embroidery
+          for the world's most exclusive cars.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-2.5">
+          {chips.map((c) => <span class="chip">{c}</span>)}
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 lg:pl-8 lg:text-right">
+        <p class="foot-head">The atelier</p>
+        <a href={site.whatsappHref} target="_blank" rel="noopener" class="foot-phone">{site.phone}</a>
+        <a href={site.instagramHref} target="_blank" rel="noopener" class="mt-2 block transition-colors" style="color:rgb(var(--rgb-cream) / 0.65)">{site.instagramHandle}</a>
+        <div class="mt-6 flex gap-3 lg:justify-end">
+          <a href={site.instagramHref} target="_blank" rel="noopener noreferrer" class="foot-soc" aria-label="HM Atelier on Instagram">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.2"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a href={site.threadsHref} target="_blank" rel="noopener noreferrer" class="foot-soc" aria-label="HM Atelier on Threads">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><path d="M12.2 2C6.9 2 3.5 5.5 3.5 12s3.4 10 8.7 10c4.5 0 7.2-2.6 7.8-6l-2.2-.5c-.4 2.2-2 3.9-5.6 3.9-3.9 0-5.9-2.6-5.9-7.4S6.8 4.1 12.2 4.1c3.6 0 5.4 1.9 5.4 4.3 0 2.6-1.8 4.3-4.9 4.3-1.4 0-2.4-.5-2.4-1.7 0-1 .8-1.6 2-1.6.9 0 1.6.3 2 .9.4-1.9-.3-3.4-2.3-3.4-2.3 0-3.7 1.6-3.7 3.9 0 2.4 1.8 3.7 4.4 3.7 4.2 0 6.9-2.6 6.9-6.3C19.6 4.7 16.7 2 12.2 2z"/></svg>
+          </a>
+          <a href={site.whatsappHref} target="_blank" rel="noopener noreferrer" class="foot-soc" aria-label="HM Atelier on WhatsApp"><MessageCircle size={19} /></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+      <nav aria-label="Explore">
+        <p class="foot-head">Explore</p>
+        <ul class="space-y-3">
+          {nav.filter((n) => n.href !== '/').map((n) => <li><a href={n.href} class="foot-link">{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label="Atelier">
+        <p class="foot-head">Atelier</p>
+        <ul class="space-y-3">
+          <li><a href="/about" class="foot-link">About Haroon</a></li>
+          <li><a href="/craft" class="foot-link">The craft</a></li>
+          <li><a href="/contact" class="foot-link">Commission</a></li>
+          <li><a href="/ar" class="foot-link">العربية</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Connect">
+        <p class="foot-head">Connect</p>
+        <ul class="space-y-3">
+          <li><a href={site.instagramHref} target="_blank" rel="noopener" class="foot-link">Instagram</a></li>
+          <li><a href={site.threadsHref} target="_blank" rel="noopener" class="foot-link">Threads</a></li>
+          <li><a href={site.facebookHref} target="_blank" rel="noopener" class="foot-link">Facebook</a></li>
+        </ul>
+      </nav>
+      <div>
+        <p class="foot-head">Location</p>
+        <ul class="space-y-3" style="color:rgb(var(--rgb-cream) / 0.65)">
+          <li>{site.addressLine}</li>
+          <li style="color:rgb(var(--rgb-cream-dim))">{site.addressNote}</li>
+          <li style="color:rgb(var(--rgb-cream-dim))">Worldwide commissions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4 border-t border-line/60 py-7 text-sm md:flex-row md:items-center md:justify-between" style="color:rgb(var(--rgb-cream) / 0.72)">
+      <p>&copy; {year} {site.legal} · Dubai, United Arab Emirates</p>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <a href="/legal" class="foot-link">Legal</a>
+        <a href="/privacy" class="foot-link">Privacy</a>
+        <a href="https://www.blacklyne.ai" target="_blank" rel="noopener" class="foot-link">Design: Blacklyne</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { position: relative; background: rgb(var(--rgb-surface)); }
+  .footer-accent { position: absolute; inset-block-start: 0; inset-inline: 0; height: 1px; background: linear-gradient(90deg, rgb(var(--rgb-gold)) 0%, rgb(var(--rgb-gold) / 0.12) 40%, transparent 70%); }
+  .footer-word { font-family: var(--font-sans); font-size: 0.9rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(var(--rgb-cream)); }
+  .foot-head { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: rgb(var(--rgb-gold)); margin-bottom: 1.25rem; }
+  .foot-link { color: rgb(var(--rgb-cream) / 0.65); transition: color 0.2s ease; }
+  .foot-link:hover { color: rgb(var(--rgb-cream)); }
+  .foot-phone { display: inline-block; font-family: var(--font-display); font-size: clamp(1.4rem, 2.2vw, 1.9rem); font-weight: 460; color: rgb(var(--rgb-cream)); line-height: 1.1; transition: color 0.2s ease; }
+  .foot-phone:hover { color: rgb(var(--rgb-gold)); }
+  .foot-soc { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 999px; border: 1px solid rgb(var(--rgb-cream) / 0.14); color: rgb(var(--rgb-cream) / 0.85); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease; }
+  .foot-soc:hover { background: rgb(var(--rgb-gold)); color: rgb(var(--rgb-bg)); border-color: rgb(var(--rgb-gold)); transform: translateY(-2px); }
+</style>

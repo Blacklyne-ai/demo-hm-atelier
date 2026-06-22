@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Craft from '../components/Craft.astro';
+import CraftSequence from '../components/CraftSequence.astro';
+import CinematicBand from '../components/CinematicBand.astro';
+---
+<Layout
+  title="Craft & materials · HM Atelier"
+  description="The craft behind HM Atelier — exotic hides, fine leather, perforation and hand embroidery, cut and stitched by hand in Dubai and set into the car."
+  current="/craft"
+>
+  <PageHero
+    eyebrow="The craft"
+    title="It begins with the material."
+    sub="Hide, leather, thread — selected, cut and stitched by hand, then set into the car so the finish reads as though it always belonged."
+    img="/media/craft/crocodile-hide.webp"
+  />
+  <Craft bare={true} />
+  <CraftSequence />
+  <CinematicBand
+    img="embroidery"
+    align="center"
+    statement="The detail no one else will have."
+    sub="Monograms, motifs and finishes made to a single specification — yours."
+    alt="Hand embroidery on white leather by HM Atelier"
+  />
+</Layout>

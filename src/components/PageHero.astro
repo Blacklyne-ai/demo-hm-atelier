@@ -1,0 +1,28 @@
+---
+// Subpage header — compact, dark, optional full-bleed still with scrim.
+interface Props { eyebrow: string; title: string; sub?: string; img?: string; }
+const { eyebrow, title, sub, img } = Astro.props;
+---
+<section class="phero" class:list={[img && 'has-img']}>
+  {img && (
+    <>
+      <img class="phero-bg" src={img} alt="" aria-hidden="true" loading="eager" decoding="async" />
+      <div class="phero-scrim" aria-hidden="true"></div>
+    </>
+  )}
+  <div class="shell phero-inner">
+    <p class="eyebrow fade-in">{eyebrow}</p>
+    <h1 class="h-hero mt-5 text-balance fade-in stagger-1">{title}</h1>
+    {sub && <p class="lead measure mt-6 fade-in stagger-2">{sub}</p>}
+  </div>
+</section>
+
+<style>
+  .phero { position: relative; overflow: hidden; background: rgb(var(--rgb-bg)); padding-top: 9rem; }
+  .phero-inner { position: relative; z-index: 2; padding-bottom: clamp(3rem, 6vw, 5rem); }
+  @media (min-width: 768px) { .phero { padding-top: 11rem; } }
+  .phero.has-img { padding-top: 11rem; }
+  .phero.has-img .phero-inner { padding-bottom: clamp(4rem, 8vw, 7rem); }
+  .phero-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; opacity: 0.5; }
+  .phero-scrim { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to top, rgb(var(--rgb-bg)) 0%, rgb(8 7 6 / 0.55) 55%, rgb(8 7 6 / 0.4) 100%); }
+</style>

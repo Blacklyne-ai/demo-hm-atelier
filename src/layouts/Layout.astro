@@ -1,0 +1,215 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  current?: string;
+  noindex?: boolean;
+  heroPoster?: string;
+}
+const {
+  title,
+  description = site.metaDescription,
+  current = '',
+  noindex = false,
+  heroPoster,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL('/og-image.jpg', Astro.site ?? site.url).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  '@id': site.url,
+  name: site.name,
+  alternateName: 'HM Atelier — bespoke automotive interiors',
+  image: ogImage,
+  url: site.url,
+  description: site.metaDescription,
+  founder: { '@type': 'Person', name: site.founder, jobTitle: site.founderRole },
+  address: { '@type': 'PostalAddress', addressLocality: 'Dubai', addressCountry: 'AE' },
+  areaServed: 'Worldwide',
+  knowsAbout: [
+    'Bespoke automotive interior design', 'Leather upholstery', 'Exotic hides',
+    'Crocodile leather', 'Steering wheel restoration', 'Automotive embroidery',
+  ],
+  sameAs: [site.instagramHref, site.threadsHref],
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0A0908" />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow" />}
+
+    {heroPoster && <link rel="preload" as="image" href={heroPoster} fetchpriority="high" />}
+    <link rel="preload" href="/fonts/fraunces.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/hanken.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="icon" href="/favicon-512.png" sizes="512x512" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="scroll-progress" aria-hidden="true"><span data-progress></span></div>
+    <div class="grain" aria-hidden="true"></div>
+    <Header current={current} />
+    <main id="main"><slot /></main>
+    <Footer />
+    <CookieBanner />
+
+    <script>
+      import { gsap } from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+      import Lenis from 'lenis';
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ── Reveals (always run) ──
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => {
+          if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+        }),
+        { rootMargin: '0px 0px -40px 0px', threshold: 0.05 }
+      );
+      document.querySelectorAll('.fade-in').forEach((el) => io.observe(el));
+
+      // ── Scroll progress bar (always) ──
+      const pbar = document.querySelector('[data-progress]') as HTMLElement | null;
+      if (pbar) {
+        const onProg = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          pbar.style.transform = `scaleX(${max > 0 ? Math.min(1, h.scrollTop / max) : 0})`;
+        };
+        onProg();
+        window.addEventListener('scroll', onProg, { passive: true });
+        window.addEventListener('resize', onProg, { passive: true });
+      }
+
+      // ── Smooth-scroll + scrub layer (skipped on reduced-motion) ──
+      if (!reduce) {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, wheelMultiplier: 1 });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((t) => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+        (window as any).__lenis = lenis;
+
+        document.querySelectorAll('a[href^="#"]').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            const id = a.getAttribute('href');
+            if (!id || id === '#') return;
+            const target = document.querySelector(id);
+            if (!target) return;
+            e.preventDefault();
+            lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.1 });
+          });
+        });
+
+        // Oversized media: slow parallax drift
+        document.querySelectorAll('[data-parallax]').forEach((el) => {
+          const amt = parseFloat(el.getAttribute('data-parallax') || '12');
+          const wrap = el.closest('[data-parallax-wrap]') || el.parentElement || el;
+          gsap.fromTo(el, { yPercent: -amt / 2 }, {
+            yPercent: amt / 2, ease: 'none',
+            scrollTrigger: { trigger: wrap, start: 'top bottom', end: 'bottom top', scrub: true },
+          });
+        });
+
+        // Full-bleed photo bands (image is 118% tall → motion never reveals edges)
+        document.querySelectorAll('[data-parallax-bg]').forEach((el) => {
+          const sec = el.closest('section') || el.parentElement || el;
+          gsap.fromTo(el, { yPercent: -10 }, {
+            yPercent: 10, ease: 'none',
+            scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: 1 },
+          });
+        });
+
+        // Clip-reveal: media wipes up into view on scroll
+        document.querySelectorAll('[data-reveal-clip]').forEach((el) => {
+          gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)' }, {
+            clipPath: 'inset(0 0 0% 0)', ease: 'none',
+            scrollTrigger: { trigger: el, start: 'top 88%', end: 'top 42%', scrub: 0.5 },
+          });
+        });
+
+        // Headline mask-rise
+        document.querySelectorAll('[data-rise]').forEach((el) => {
+          el.classList.remove('fade-in');
+          gsap.fromTo(el, { clipPath: 'inset(0 0 100% 0)', y: 18 }, {
+            clipPath: 'inset(0 0 -8% 0)', y: 0, duration: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 86%' },
+          });
+        });
+
+        // Scrub timeline: spine fills, nodes fire (process section)
+        document.querySelectorAll('[data-tl]').forEach((tl) => {
+          const fill = tl.querySelector('[data-tl-fill]');
+          if (fill) {
+            gsap.fromTo(fill, { scaleY: 0 }, {
+              scaleY: 1, ease: 'none', transformOrigin: 'top',
+              scrollTrigger: { trigger: tl, start: 'top 64%', end: 'bottom 80%', scrub: 0.6 },
+            });
+          }
+          tl.querySelectorAll('[data-tl-node]').forEach((node) => {
+            ScrollTrigger.create({
+              trigger: node, start: 'top 62%',
+              onEnter: () => node.classList.add('is-on'),
+              onLeaveBack: () => node.classList.remove('is-on'),
+            });
+          });
+        });
+
+        // Magnetic CTAs (fine pointer only)
+        if (window.matchMedia('(pointer: fine)').matches) {
+          document.querySelectorAll('[data-magnetic]').forEach((el) => {
+            const h = el as HTMLElement;
+            h.addEventListener('mousemove', (ev) => {
+              const e = ev as MouseEvent;
+              const r = h.getBoundingClientRect();
+              gsap.to(h, { x: (e.clientX - (r.left + r.width / 2)) * 0.3, y: (e.clientY - (r.top + r.height / 2)) * 0.45, duration: 0.4, ease: 'power3.out' });
+            });
+            h.addEventListener('mouseleave', () => gsap.to(h, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.4)' }));
+          });
+        }
+
+        ScrollTrigger.refresh();
+      }
+    </script>
+
+    <style is:global>
+      .skip-link { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+      .skip-link:focus { position: fixed; top: 1rem; left: 1rem; width: auto; height: auto; clip: auto; padding: 0.75rem 1.25rem; background: rgb(var(--rgb-cream)); color: rgb(var(--rgb-bg)); border-radius: var(--r-sm); z-index: 300; font-weight: 700; }
+    </style>
+  </body>
+</html>

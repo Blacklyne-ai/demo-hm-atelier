@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ArrowRight } from '@lucide/astro';
+---
+<Layout title="Page not found · HM Atelier" noindex>
+  <section class="flex min-h-[84svh] items-center bg-bg">
+    <div class="shell pb-20 pt-32 text-center">
+      <p class="eyebrow justify-center">Error 404</p>
+      <h1 class="h-hero mt-5">This page doesn't exist.</h1>
+      <p class="lead mx-auto mt-6 max-w-md">The piece you were looking for may have moved. Back to the work.</p>
+      <div class="mt-9 flex flex-wrap justify-center gap-3">
+        <a href="/" class="btn btn-primary btn-pill btn-lg">Home <ArrowRight size={16} /></a>
+        <a href="/work" class="btn btn-ghost btn-pill btn-lg">View the work</a>
+      </div>
+    </div>
+  </section>
+</Layout>
